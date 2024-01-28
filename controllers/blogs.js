@@ -193,7 +193,7 @@ module.exports.addVote = async (req, res) =>{
 
     const newBlog = await blog.save();
     re.status(200).json({mesaage: "Voted successfully",
-    blog: newblog })
+    blog: newBlog })
     } catch(e){
         console.log("error:"+ JSON.stringify(e));
         res.status(500).json({ message: "Internal Server Error"})
