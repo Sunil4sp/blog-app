@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-/* const bodyParser = require("body-parser"); */
+const bodyParser = require("body-parser");
 require('dotenv').config();
 const app = express();
 
@@ -19,7 +19,7 @@ function ConnectToMongoDb(){
 ConnectToMongoDb();
 
 //middleware to handle json request body
-app.use(express.json());
+app.use(bodyParser.json());
 
 //endpoints
 app.get('/', (req, res) =>{
