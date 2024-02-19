@@ -1,8 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import BsSearch from 'react-icons/bs';
-import FaBars from 'react-icons/fa';
+import {BsSearch} from 'react-icons/bs';
+import {FaBars} from 'react-icons/fa';
 import Menu from './Menu';
+import { UserContext } from '../context/UserContext';
 
 const Navbar = () => {
 const [prompt, setPrompt] = useState("");
@@ -19,7 +20,7 @@ const showMenu = () =>{
     <>
       <div className='flex items-center justify-between px-6 md:px-[200px] py-4 bg-black text-white'>
         <h1 className='text-lg md:text-xl font-extrabold'>
-          <Link to="/">Blogosphere</Link>
+          <Link to="/">BlogWorld</Link>
         </h1>
         { path === '/' && <div onChange={(e) => setPrompt(e.target.value)} className='flex justify-center items-center space-x-0'>
           <input className='outline-none rounded-l-xl px-3 text-black bg-white' placeholder='Search a post' type='text'/>
@@ -41,12 +42,12 @@ const showMenu = () =>{
             </div> : <h3> <Link to='/register'>Register</Link></h3>}
 
           </div>
-          <div onClick={showMenu} className='md:hidden text-lg'>
+          {/* <div onClick={showMenu} className='md:hidden text-lg'>
             <p className='cursor-pointer relative'>
                 <FaBars />
             </p>
             {menu && <Menu />}
-          </div>
+          </div> */}
       </div>
     </>
   )
