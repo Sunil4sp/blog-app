@@ -10,7 +10,8 @@ const Register = () => {
     .catch(error=> console.error("error fetching users:", error));
   }, [])
   return (
-    <div>
+    <div className='md:container md:mx-auto px-4 columns-1 md:box-content h-32 w-32 p-4 border-4 mt-6'>
+      Hello
       {users.map(user =>(
         <div key={user.id}>{user.name}</div>
       ))}

@@ -18,13 +18,13 @@ const showMenu = () =>{
 
   return (
     <>
-      <div className='flex items-center justify-between px-6 md:px-[200px] py-4 bg-black text-white'>
+      <div className='flex items-center justify-between px-6 md:px-[200px] py-4 bg-white text-black my-1 border-b-2'>
         <h1 className='text-lg md:text-xl font-extrabold'>
           <Link to="/">BlogWorld</Link>
         </h1>
         { path === '/' && <div onChange={(e) => setPrompt(e.target.value)} className='flex justify-center items-center space-x-0'>
-          <input className='outline-none rounded-l-xl px-3 text-black bg-white' placeholder='Search a post' type='text'/>
-          <p onClick={() => navigate(prompt ? "?search" + prompt : navigate("/")) } className='cursor-pointer p-1 bg-white text-black rounded-r-xl'>
+          <input className='outline outline-1 rounded-l-xl px-3 text-black bg-white' placeholder='Search a post' type='text'/>
+          <p onClick={() => navigate(prompt ? "?search" + prompt : navigate("/")) } className='cursor-pointer outline outline-1 py-1 px-1 bg-white text-black rounded-r-xl'>
             <BsSearch />
           </p>
           </div>}
@@ -39,15 +39,10 @@ const showMenu = () =>{
               <p className='cursor-pointer relative'></p>
                 <FaBars />
                 {menu && <Menu />}
-            </div> : <h3> <Link to='/register'>Register</Link></h3>}
-
+            </div> : <h3> <Link to='/register'>Register</Link></h3>
+            }
           </div>
-          {/* <div onClick={showMenu} className='md:hidden text-lg'>
-            <p className='cursor-pointer relative'>
-                <FaBars />
-            </p>
-            {menu && <Menu />}
-          </div> */}
+          
       </div>
     </>
   )
