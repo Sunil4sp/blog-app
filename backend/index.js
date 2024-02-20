@@ -40,7 +40,7 @@ app.get(`/hello`, (req, res) => {
     res.send("Hello, Postman!");
 });
 
-app.listen(PORT, (req, res) =>{
+app.listen(api+"/"+PORT, (req, res) =>{
     ConnectDB();
     console.log(`Server is running at PORT ${PORT}`);
 })
