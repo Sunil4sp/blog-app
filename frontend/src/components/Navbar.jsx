@@ -20,7 +20,7 @@ const showMenu = () =>{
     <>
       <div className='flex items-center justify-between px-6 md:px-[200px] py-4 bg-white text-black my-1 border-b-2'>
         <h1 className='text-lg md:text-xl font-extrabold'>
-          <Link to="/">BlogWorld</Link>
+          <Link to="/">Blog UrSelf</Link>
         </h1>
         { path === '/' && <div onChange={(e) => setPrompt(e.target.value)} className='flex justify-center items-center space-x-0'>
           <input className='outline outline-1 rounded-l-xl px-3 text-black bg-white' placeholder='Search a post' type='text'/>
@@ -29,7 +29,7 @@ const showMenu = () =>{
           </p>
           </div>}
 
-          <div className='hidden md:flex items-center justify-center space-x-2 md:space-x-4'>
+          <div className='hidden md:flex items-center justify-center space-x-2 md:space-x-4 text-black' >
             {
               user ? <h3> <Link to='/write'>Write</Link></h3> : <h3>
                 <Link to='/login'>Login</Link>
