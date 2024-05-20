@@ -11,6 +11,6 @@ const tagSchema = new mongoose.Schema({
         ref: "Blog",
         },
     ]
-},{ timestamps });
+},{ timestamps: true });
 
 module.exports = mongoose.Model("Tag", tagSchema);

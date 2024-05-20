@@ -22,7 +22,7 @@ const commentSchema  = new mongoose.Schema({
     isNested: Boolean,
     comments: [this],
 },
-    { timestamps }
+    { timestamps: true }
 );
 
 

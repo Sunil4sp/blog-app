@@ -3,11 +3,12 @@ const mongoose = require('mongoose');
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const multer = require("multer");
+const User = require("./models/User");
 require('dotenv').config();
 const app = express();
 
 const PORT = process.env.PORT || 3000;
-const api = process.env.API_URL;
+/* const api = process.env.API_URL; */
 
 app.use(cors())
 const corsOptions = {
@@ -36,11 +37,25 @@ app.get('/', (req, res) =>{
     res.send('Hello World!');
 });
 
-app.get(`/hello`, (req, res) => {
-    res.send("Hello, Postman!");
+app.post('/signup', async(req, res) => {
+    const username = req.body.username
+    const email = req.body.email
+    const password = req.body.password
+
+    const formData = new User({
+        username,
+        email,
+        password
+    })
+    try{
+        await formData.save();
+        res.send("Data inserted..");
+    } catch(err){
+        console.log(err);
+    }
 });
 
-app.listen(api+"/"+PORT, (req, res) =>{
+app.listen(PORT, (req, res) =>{
     ConnectDB();
     console.log(`Server is running at PORT ${PORT}`);
 })
