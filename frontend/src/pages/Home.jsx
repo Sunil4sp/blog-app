@@ -1,10 +1,18 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
 import CreatePost from './CreatePost';
+import Login from './Login';
+import { UserContext } from '../context/UserContext';
+import { useContext } from "react";
 
 const Home = () => {
+  const { user } = useContext(UserContext);
+
+
+  
   return (
     <>
+      <Login />
       <Navbar />
       <CreatePost />
       {/* <div className='md:container-sm md:mx-auto px-4 columns-1 md:box-content h-32 w-96 p-4 mt-6 grid bg-white border-slate-100 dark:bg-slate-800 dark:border-slate-500 border-b rounded-t-xl'>
