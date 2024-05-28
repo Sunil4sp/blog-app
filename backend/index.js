@@ -7,7 +7,7 @@ const User = require("./models/User");
 require('dotenv').config();
 const app = express();
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8000;
 /* const api = process.env.API_URL; */
 
 app.use(cors())
@@ -33,7 +33,7 @@ const ConnectDB = async() =>{
 app.use(bodyParser.json());
 
 //endpoints
-app.get('/', (req, res) =>{
+app.get('/login', (req, res) =>{
     res.send('Hello World!');
 });
 
@@ -52,6 +52,18 @@ app.post('/signup', async(req, res) => {
         res.send("Data inserted..");
     } catch(err){
         console.log(err);
+    }
+});
+
+//Handling user logout 
+app.get("/logout", async (req, res)=> {
+    try {
+        req.session.destroy();
+        await formData.clear();
+        res.redirect('/');
+    } catch(err){
+        console.error('Error during logout:', err);
+        res.status(500).send('Logout failed. Please try again later.');
     }
 });
 
