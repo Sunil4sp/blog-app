@@ -21,7 +21,7 @@ const Menu = () => {
   }
 
   return (
-    <div className="bg-aqua w-[200px] z-10 flex flex-col items-start absolute top-12 right-6 md:right-32 rounded-md p-4 space-y-4 shadow-inner bg-slate-50 hover:bg-blend-darken">
+    <div className="bg-aqua w-[160px] z-10 flex flex-col items-start absolute top-12 right-6 md:right-48 rounded-md p-4 space-y-4 shadow-inner bg-slate-50 hover:bg-blend-darken">
      {
       !user && <h3 className="text-black text-sm hover:text-gray-500 cursor-pointer outline-dotted outline-stone-100 outline-white">
         <Link to='/login'>Login</Link>
@@ -45,6 +45,11 @@ const Menu = () => {
      {
       user && <h3 className="text-black text-sm hover:text-gray-500 cursor-pointer">
         <Link to={'/myblogs/' + user._id}>My Blogs</Link>
+      </h3>
+     }
+     {
+      user && <h3 className="text-black text-sm hover:text-gray-500 cursor-pointer">
+        <Link to={'/login'}>Login</Link>
       </h3>
      }
      {

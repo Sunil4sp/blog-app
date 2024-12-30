@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 const CreatePost = () => {
   return (
@@ -12,8 +12,8 @@ const CreatePost = () => {
         </div>
           {/* <div className='gap-8 columns-2xs items-center justify-evenly bg-gray rounded-sm border-4'></div> */}
           <div className='md:container md:mx-auto px-4 mb-6 flex flex-row items-center justify-center bg-gray gap-4'>
-            <button className='bg-sky-500 hover:bg-sky-700 px-4 py-2 shadow-md rounded-full shadow-md'>Post</button>
-            <button className='bg-sky-500 hover:bg-sky-700 px-4 py-2 shadow-md rounded-full shadow-md'>Edit</button>
+            <button className='bg-sky-500 hover:bg-sky-700 hover:text-white px-4 py-2 shadow-md rounded-lg shadow-md'>Post</button>
+            <button className='bg-sky-500 hover:bg-sky-700 hover:text-white px-4 py-2 shadow-md rounded-lg shadow-md'>Edit</button>
           </div>
         </div>
     </>
