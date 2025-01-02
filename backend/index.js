@@ -8,7 +8,7 @@ require('dotenv').config();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const app = express();
-
+const Post = require("./models/Blog");
 const PORT = process.env.PORT || 8000;
 /* const api = process.env.API_URL; */
 
@@ -23,13 +23,66 @@ app.use(cors(corsOptions));
 //connect to Db
 const ConnectDB = async() =>{
     try{
-        mongoose.connect(process.env.DB_URL);
+        await mongoose.connect(process.env.DB_URL);
         console.log("Connected to DB");
     } catch(err){
-        console.error("Cannot connect to DB");
+        console.error("Cannot connect to DB",err);
     }
 }
 
+// Multer configuration to save files
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, 'uploads/'); // You can change the folder where images will be saved
+    },
+    filename: (req, file, cb) => {
+      cb(null, Date.now() + path.extname(file.originalname)); // Generate unique file name
+    },
+    });
+    
+    const upload = multer({ 
+        storage,
+        limits: { fileSize: 5 * 1024 * 1024},    
+    });
+    
+    // Route to handle profile picture upload
+app.post(`/uploadProfilePicture/:userId`, upload.single('profilePicture'), async (req, res) => {
+        try {
+        const userId = req.params.userId;
+        const token = req.headers.authorization?.split(' ')[1];
+    
+        if (!token) {
+            return res.status(401).json({ message: 'No token provided' });
+        }
+    
+        const decoded = jwt.verify(token, 'your_secret_key');
+        if (decoded.userId !== userId) {
+            return res.status(403).json({ message: 'You are not authorized to update this profile' });
+        }
+    
+        const imageUrl = `http://localhost:8000/uploads/${req.file.filename}`;
+    
+        // Update user's profile picture URL
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { profilePicture: imageUrl },
+            { new: true }
+        );
+    
+        res.json({
+            message: 'Profile picture uploaded successfully',
+            user: updatedUser,
+            imageUrl,
+        });
+        } catch (error) {
+        console.error('Error uploading profile picture:', error);
+        res.status(500).json({ message: 'Error uploading profile picture' });
+        }
+    });
+    
+    // Serve static files (image files)
+app.use('/uploads', express.static('uploads'));
+    
 
 //middleware to handle json request body
 app.use(bodyParser.json());
@@ -59,7 +112,7 @@ app.post('/login', async (req, res) =>{
             return res.status(401).json({message: "Invalid Credentials"});
         }
         //create jwt token
-        const token = jwt.sign({ userId: user._id}, 'your_secret_key',{ expiresIn: '1h'});
+        const token = jwt.sign({ userId: user._id}, 'your_secret_key',{ expiresIn: '1d'});
 
         //return the token
         res.json({ 
@@ -99,16 +152,52 @@ app.post('/register', async(req, res) => {
 });
 
 //Handling user logout 
-app.get("/logout", async (req, res)=> {
-    try {
-        req.session.destroy();
-        await newUser.clear();
-        res.redirect('/');
-    } catch(err){
-        console.error('Error during logout:', err);
-        res.status(500).send('Logout failed. Please try again later.');
-    }
+app.get("/logout", (req, res)=> {
+    res.status(500).json({ message: "Logged out successfully."});
 });
+
+app.get("/profile", async (req, res) => {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) return res.status(401).json({ message: "No token provided" });
+  
+    try {
+        const decoded = jwt.verify(token, 'your_secret_key');
+        const user = await User.findById(decoded.userId);
+        if (!user) return res.status(404).json({ message: "User not found" });
+    
+        res.json({ user: { ...user.toObject(), profilePicture: user.profilePicture } });
+    } catch (error) {
+      res.status(401).json({ message: "Invalid or expired token" });
+    }
+  });
+
+  app.post('/posts', async (req, res) => {
+    const { title, description, tag, imageUrl } = req.body;
+    const token = req.headers['authorization'].split(' ')[1]; // Extract token
+    if (!token) return res.status(401).json({ message: 'No token provided' });
+  
+    try {
+      // Verify the token
+        const decoded = jwt.verify(token, 'your_secret_key');
+        const userId = decoded.userId;
+    
+        // Create the post
+        const newPost = new Post({ 
+            title, 
+            description, 
+            tag,
+            imageUrl,
+            user: userId,
+            username: decoded.username
+        });
+        await newPost.save();
+    
+        res.status(201).json({ message: 'Post created', post: newPost, userId: userId });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error' });
+    }
+  });
 
 app.listen(PORT, (req, res) =>{
     ConnectDB();

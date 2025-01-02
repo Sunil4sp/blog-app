@@ -1,4 +1,4 @@
-const mongoose =require('mongoose');
+const mongoose = require('mongoose');
 
 const blogSchema = new mongoose.Schema(
 {
@@ -15,10 +15,6 @@ const blogSchema = new mongoose.Schema(
     tag: {
         type: [String],
         required: true,
-    },
-    imageUrl: {
-        type: String,
-        default: "",
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,
@@ -37,4 +33,4 @@ const blogSchema = new mongoose.Schema(
     },
 }, { timestamps: true });
 
-module.exports = mongoose.Model("Blog", blogSchema);
+module.exports = mongoose.model("Blog", blogSchema);

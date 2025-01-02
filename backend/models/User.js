@@ -19,6 +19,10 @@ const userSchema  = new mongoose.Schema({
         required: true,
         min: 5,
     },
+    imageUrl: {
+            type: String,
+            default: "",
+        },
     later: [
         {
         type: mongoose.Schema.Types.ObjectId,
