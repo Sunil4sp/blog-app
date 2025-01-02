@@ -25,6 +25,7 @@ const Register = () => {
       setError(error.response?.data?.message || "Registration failed");
     }
     console.log("Registration Done", data);
+    setUsers("");
   };
 
   /* useEffect(()=>{
@@ -76,10 +77,7 @@ const Register = () => {
             Login
           </button>
         </Link>
-        {/* <div className='md:container flex flex-row items-between justify-evenly content-between m-4'>
-                
-                <Link to="/register"><button type="submit" className='bg-blue-300 p-4 rounded-lg m-4 w-8/12'>Register</button></Link>
-            </div> */}
+        
       </div>
       {error && <div style={{ color: "red" }}>{error}</div>}
       {users.map((user) => (
