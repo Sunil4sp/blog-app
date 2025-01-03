@@ -36,7 +36,7 @@ const Menu = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.get("/logout", {
+      await axios.get("http://localhost:8000/logout", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

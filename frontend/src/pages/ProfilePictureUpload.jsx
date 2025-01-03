@@ -1,12 +1,21 @@
 import React, { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
-const ProfilePictureUpload = ({ userId }) => {
+const ProfilePictureUpload = () => {
+    
+    const { id } = useParams();
+    const navigate = useNavigate();
+
     const [profilePicture, setProfilePicture] = useState(null);
     const [preview, setPreview] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [uploadedUrl, setUploadedUrl] = useState(null);
+
+    /* useEffect(() => {
+        console.log("User ID from URL: ", id); // Check if id is extracted correctly
+        }, [id]); */
 
     // Handle file change event
     const handleFileChange = (e) => {
@@ -14,6 +23,7 @@ const ProfilePictureUpload = ({ userId }) => {
         if (file) {
         setProfilePicture(file);
         setPreview(URL.createObjectURL(file)); // Create a preview of the image
+        setError(null);
         }
     };
 
@@ -32,19 +42,22 @@ const ProfilePictureUpload = ({ userId }) => {
         try {
         setLoading(true);
         const token = localStorage.getItem("token");
-        const response = await axios.post(`http://localhost:8000/uploadProfilePicture/${userId}`, formData, {
+        const response = await axios.post(`http://localhost:8000/uploadProfilePicture/${id}`, formData, {
             headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data",
             },
     
         });
-            console.log(response);
+            /* console.log(response); */
 
         // Handle success
             console.log("Profile picture uploaded successfully:", response.data);
-            setUploadedUrl(response.data.filePath);
+            setUploadedUrl(response.data.imageUrl);
+            setPreview(null);
             setLoading(false);
+
+            navigate(`/profile/${id}`);
         } catch (err) {
             console.error("Error uploading profile picture:", err);
             setError("Error uploading profile picture");
@@ -78,7 +91,7 @@ const ProfilePictureUpload = ({ userId }) => {
             <div>
             <h4>Uploaded Image URL:</h4>
             <a href={uploadedUrl} target="_blank" rel="noopener noreferrer">
-                {uploadedUrl}
+                {/* {uploadedUrl} */}View Image
             </a>
             <img
                 src={uploadedUrl}

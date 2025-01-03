@@ -1,12 +1,13 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import {Link} from 'react-router-dom';
+import {Link, useNavigate } from 'react-router-dom';
 import Loader from '../components/Loader';
 /* import ProfilePictureUpload from './ProfilePictureUpload'; */
 /* import avatar from '../images/Profile.jpg'; */
 
 const Profile = () => {
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() =>{
     const token = localStorage.getItem("token");
@@ -17,6 +18,7 @@ const Profile = () => {
         },
       })
       .then((response)=>{
+        console.log("User data fetched: ", response.data.user);
         setUser(response.data.user);
       })
       .catch((error) => {
@@ -24,11 +26,12 @@ const Profile = () => {
         // If error occurs (e.g., token expired), remove the token and set user to null
         localStorage.removeItem("token");
         setUser(null);
+        navigate("/login");
       });
     } else {
     setUser(null); // If there's no token, set user to null
     }
-  },[]);
+  },[navigate]);
 
   return (
     <>
@@ -48,7 +51,10 @@ const Profile = () => {
                 )}
                 {/* Link to upload new profile picture */}
                 <Link to={`/uploadProfilePicture/${user._id}`}>
-                  <button className='mt-2 bg-blue-500 text-white rounded px-4 py-2'>Change Picture</button>
+                {/* {console.log(user._id)
+                } */}
+                  <button className='mt-2 bg-blue-500 text-white rounded px-4 py-2'>Change Picture
+                  </button>
                 </Link>
               </div>
           </div>
@@ -57,7 +63,7 @@ const Profile = () => {
                   Profile
                 </div>
                 <div className='text-sm'>
-                  hi
+                {`Hello, ${user.username}!`}
                 </div>
           </div>
           {/* <div className='basis-2/4 border-l-2 font-mono p-8 flex flex-col'>
