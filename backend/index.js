@@ -9,6 +9,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const app = express();
 const Post = require("./models/Blog");
+const path = require('path');
 const PORT = process.env.PORT || 8000;
 /* const api = process.env.API_URL; */
 
@@ -49,6 +50,8 @@ const storage = multer.diskStorage({
 app.post(`/uploadProfilePicture/:userId`, upload.single('profilePicture'), async (req, res) => {
         try {
         const userId = req.params.userId;
+        console.log("User ID from URL:", userId);
+
         const token = req.headers.authorization?.split(' ')[1];
     
         if (!token) {
@@ -56,7 +59,11 @@ app.post(`/uploadProfilePicture/:userId`, upload.single('profilePicture'), async
         }
     
         const decoded = jwt.verify(token, 'your_secret_key');
+        console.log("Decoded Token:", decoded);
+        console.log('Provided userId:', userId);
+
         if (decoded.userId !== userId) {
+            console.log(`Token userId (${decoded.userId}) does not match URL userId (${userId})`);
             return res.status(403).json({ message: 'You are not authorized to update this profile' });
         }
     
@@ -153,7 +160,7 @@ app.post('/register', async(req, res) => {
 
 //Handling user logout 
 app.get("/logout", (req, res)=> {
-    res.status(500).json({ message: "Logged out successfully."});
+    res.status(200).json({ message: "Logged out successfully."});
 });
 
 app.get("/profile", async (req, res) => {
