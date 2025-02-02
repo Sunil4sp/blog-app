@@ -17,15 +17,15 @@ module.exports.addBlog = async (req, res) =>{
     const user = User.findById( userId );
 
     const blog = new Blog({
-      title,
-      description,
-      tag,
-      imageUrl,
-      user: userId,
-      username: user.username,
-      upvote: 0,
-      downvote: 0,
-      comments: [],
+        title,
+        description,
+        tag,
+        imageUrl,
+        user: userId,
+        username: user.username,
+        upvote: 0,
+        downvote: 0,
+        comments: [],
     });
     const result = await blog.save();
 
@@ -192,7 +192,7 @@ module.exports.addVote = async (req, res) =>{
     blog.votedBy.push(userId);
 
     const newBlog = await blog.save();
-    re.status(200).json({mesaage: "Voted successfully",
+    re.status(200).json({message: "Voted successfully",
     blog: newBlog })
     } catch(e){
         console.log("error:"+ JSON.stringify(e));
