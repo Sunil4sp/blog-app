@@ -9,6 +9,7 @@ const Register = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
   const [error, setError] = useState(null);
@@ -20,12 +21,13 @@ const Register = () => {
       // Update users state only after successful registration
       setUsers([...users, response.data]); // Assuming response has user data
       // Clear form fields after successful registration (optional)
+      reset();
     } catch (error) {
       console.error("Error submitting data:", error);
       setError(error.response?.data?.message || "Registration failed");
     }
     console.log("Registration Done", data);
-    setUsers("");
+    /* setUsers(""); */
   };
 
   /* useEffect(()=>{

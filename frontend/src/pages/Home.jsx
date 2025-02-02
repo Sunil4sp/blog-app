@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import CreatePost from './CreatePost';
 import axios from 'axios';
-/* import Loader from '../components/Loader'; */
+/*import CreatePost from './CreatePost';
+ import Loader from '../components/Loader'; */
 import Login from './Login';
+import MyBlogs from './MyBlogs';
 
 const Home = () => {
   const [user, setUser] = useState(null);
@@ -36,7 +37,7 @@ const Home = () => {
   return (
     <>
       {user ? (
-          <CreatePost /> )
+          <MyBlogs /> )
       :
       ( 
         <Login />)
