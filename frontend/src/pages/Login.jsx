@@ -67,7 +67,7 @@ const Login = () => {
           <input
             type={"submit"}
             className="p-4 rounded-lg m-4 w-6/12"
-            style={{ backgroundColor: "#a1eafb" }}
+            style={{ backgroundColor: "#a1eafb", cursor: "pointer"}}
             value="Login"
           />
           <h4>*if not having account</h4>

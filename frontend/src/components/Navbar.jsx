@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, /* useLocation, */ useNavigate } from 'react-router-dom';
 import {BsSearch} from 'react-icons/bs';
 import {FaBars} from 'react-icons/fa';
 import Menu from './Menu';
@@ -9,7 +9,7 @@ const Navbar = () => {
 const [prompt, setPrompt] = useState("");
 const [menu, setMenu] = useState(false);
 const navigate = useNavigate();
-const path = useLocation().pathname;
+/* const path = useLocation().pathname; */
 
 const showMenu = () =>{
   setMenu(!menu)
@@ -28,25 +28,43 @@ const showMenu = () =>{
           </h2>
         </div>
         
-        { path === '/' && <div onChange={(e) => setPrompt(e.target.value)} className='flex justify-center items-center space-x-0'>
+        { /* path === '/' && */ <div onChange={(e) => setPrompt(e.target.value)} className='flex justify-center items-center space-x-0'>
           <input className='outline outline-1 rounded-l-md px-3 text-black bg-white' placeholder='Search a post' type='text'/>
-          <p onClick={() => navigate(prompt ? "?search" + prompt : navigate("/")) } className='cursor-pointer outline outline-1 py-1 px-1 bg-white text-black rounded-r-md'>
+          <p onClick={() => navigate(prompt ? "search?q=" + prompt : navigate("/")) } className='cursor-pointer outline outline-1 py-1 px-1 bg-white text-black rounded-r-md'>
             <BsSearch />
           </p>
           </div>}
 
           <div className='hidden md:flex items-center justify-center space-x-2 md:space-x-4 text-black' >
             {
-              user ? <h3> <Link to='/write'>Write</Link></h3> : <h3>
-                <Link to='/login'>Login</Link>
+              user ? (
+              <h3> 
+                <Link to='/write'>{/* Write */}</Link>
               </h3>
+              ) : (
+              <h3>
+                <Link to='/login'>Login</Link>
+              </h3>)
             }
-            { user ? <div onClick={showMenu}>
+            {/* {user ? (
+            <div className="cursor-pointer relative">
+              <FaBars /* className="cursor-pointer" onClick={showMenu} />
+              {menu && <Menu setMenu={setMenu} />}
+            </div>
+          ) : (
+            <h3>
+              <Link to="/register">Register</Link>
+            </h3>
+          )} */}
+            { user ? (
+              <div onClick={showMenu}>
               <p className='cursor-pointer relative'></p>
                 <FaBars />
-                {menu && <Menu />}
-            </div> : <h3> <Link to='/register'>Register</Link></h3>
-            }
+                {menu && <Menu setMenu= {setMenu} />}
+            </div>
+            ) : (
+            <h3> <Link to='/register'>Register</Link></h3>
+            )}
           </div>
       </div>
     </>

@@ -15,6 +15,7 @@ const ProfilePictureUpload = lazy(() => import('./pages/ProfilePictureUpload'));
 const EditPost = lazy(() => import('./pages/EditPost'));
 const MyBlogs = lazy(() => import('./pages/MyBlogs'));
 const Profile = lazy(() => import('./pages/Profile'));
+const BlogDetail = lazy(() => import('./pages/BlogDetail'));
 
 const App = () => {
   return (
@@ -30,6 +31,7 @@ const App = () => {
         <Route exact path='/edit/:id' element= { <EditPost /> } />
         <Route exact path='/myblogs/:id' element= { <MyBlogs /> } />
         <Route exact path='/profile/:id' element= { <Profile /> } />
+        <Route exact path='/blog/:id' element={ <BlogDetail /> } />
         <Route exact path='/' element= { <Home /> } />
       </Routes>
       </Suspense>

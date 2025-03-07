@@ -67,11 +67,10 @@ const CreatePost = () => {
             className="bg-sky-500 hover:bg-sky-700 hover:text-white px-4 py-2 shadow-md rounded-lg shadow-md">
             Post
           </button>
-          <button 
-
+          {/* <button 
             className="bg-sky-500 hover:bg-sky-700 hover:text-white px-4 py-2 shadow-md rounded-lg shadow-md">
             Edit
-          </button>
+          </button> */}
         </div>
       </div>
     </>
