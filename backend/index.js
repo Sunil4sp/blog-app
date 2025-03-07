@@ -11,6 +11,7 @@ const app = express();
 const Post = require("./models/Blog");
 const path = require('path');
 const PORT = process.env.PORT || 8000;
+const { fetchUser } = require("./middlewares/fetchUser")
 /* const api = process.env.API_URL; */
 
 /* app.use(cors()) */
@@ -163,7 +164,7 @@ app.get("/logout", (req, res)=> {
     res.status(200).json({ message: "Logged out successfully."});
 });
 
-app.get("/profile", async (req, res) => {
+app.get("/profile",/* fetchUser, */ async (req, res) => {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) return res.status(401).json({ message: "No token provided" });
   
@@ -178,7 +179,7 @@ app.get("/profile", async (req, res) => {
     }
   });
 
-  app.post('/posts', async (req, res) => {
+  app.post('/posts', async (req, res) => {          //post new blog
     const { title, description, tag, imageUrl } = req.body;
     const token = req.headers['authorization'].split(' ')[1]; // Extract token
     if (!token) return res.status(401).json({ message: 'No token provided' });
@@ -195,16 +196,45 @@ app.get("/profile", async (req, res) => {
             tag,
             imageUrl,
             user: userId,
-            username: decoded.username
+            /* username: decoded.username */
         });
         await newPost.save();
     
-        res.status(201).json({ message: 'Post created', post: newPost, userId: userId });
+        res.status(201).json({ message: 'Post created successfully', post: newPost, userId: userId });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error' });
     }
   });
+  // Fetch all blogs posts for the logged-in user
+app.get('/fetchAllBlogs'/* , fetchUser */ , async (req, res) => {
+    /* const { userId } = req.user; */
+
+    try {
+        const posts = await Post.find(/* { user: userId } */);
+
+        if (!posts || posts.length === 0) {
+            return res.status(404).json({ message: 'No posts found for this user' });
+        }
+
+        res.status(200).json({ message: 'Posts retrieved successfully', posts });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error retrieving posts' });
+    }
+});
+app.get('/posts/:id', async (req, res) => {
+    try {
+      const post = await Post.findById(req.params.id);  // Find blog by ID
+        if (!post) {
+        return res.status(404).json({ message: 'Post not found' });
+        }
+        res.status(200).json({ message: 'Post retrieved successfully', post });
+        } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error' });
+    }
+    });
 
 app.listen(PORT, (req, res) =>{
     ConnectDB();

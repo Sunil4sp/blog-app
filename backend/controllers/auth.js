@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const secretKey = "MilestoneProject";
 const bcrypt = require("bcrypt");
 
-const createUser = async (res, res) =>{
+const createUser = async (req, res) =>{
     const { username, password, email } = req.body;
     try{
         const userInput = new User({username, password, email});
