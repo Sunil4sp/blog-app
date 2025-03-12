@@ -69,7 +69,7 @@ const Menu = ({setMenu}) => {
           <Link to={`/profile/${user._id}`} onClick={() => setMenu(false)}>Profile</Link>
         </h3>
         <h3 className="text-black text-sm hover:text-gray-500 cursor-pointer">
-          <Link to={"/write"} onClick={() => setMenu(false)}>Write</Link>
+          <Link to={"/write"} onClick={() => setMenu(false)}>Create blog</Link>
         </h3>
         <h3 className="text-black text-sm hover:text-gray-500 cursor-pointer">
           <Link to={`/myblogs/${user._id}`} onClick={() => setMenu(false)}>My Blogs</Link>
