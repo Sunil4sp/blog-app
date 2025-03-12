@@ -1,15 +1,19 @@
 const express = require("express");
 
-const { addBlog, deleteBlog, updateBlog, getComment, addComment, addVote, fetchAllBlogs } = require("../controllers/blogs");
+const { addBlog, deleteBlog, updateBlog, getComment, addComment, addVote, fetchAllBlogs, fetchBlogsByUser } = require("../controllers/blogs");
 const { fetchUser } = require("../middlewares/fetchUser");
 
 const router = express.Router();
 
 router.use(fetchUser);
 
-router.post('/', fetchAllBlogs);
+/* router.post('/', fetchAllBlogs); */
 
-router.post('/addblog', addBlog);
+/* router.get('/fetchBlogsByUser/:id', fetchBlogsByUser); */
+
+router.get('/', fetchBlogsByUser);
+
+router.post('/addblog/:id', addBlog);
 
 router.delete('/delete/:id', deleteBlog);
 

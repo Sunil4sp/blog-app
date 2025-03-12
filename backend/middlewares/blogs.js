@@ -12,7 +12,7 @@ const fetchAllBlogs = async (req, res, next) =>{
 };
 
 const post = async (req, res, next) =>{
-    const id = Blog._id;
+    const id = req.params.id; /* Blog._id; */
     try{
         const posts = await Blog.findById(id);
         req.posts = posts;
@@ -23,4 +23,19 @@ const post = async (req, res, next) =>{
     }
 }
 
-module.exports = fetchAllBlogs, post;
+/* const edit = async (req, res, next) =>{
+    const id = req.params.id;/* Blog._id; 
+    try{
+        const editBlog = await Blog.findById(id);
+        if (!editBlog) {
+            return res.status(404).json({ message: "Blog not found" });
+        }
+        req.editBlog = editBlog;
+        next();
+    } catch(err){
+        console.error("Error editing blog.", err);
+        return res.status(500).json({ message: "Error editing blogs"});
+    }
+}
+ */
+module.exports = fetchAllBlogs, post/* , edit */;

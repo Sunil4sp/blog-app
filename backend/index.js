@@ -207,11 +207,11 @@ app.get("/profile",/* fetchUser, */ async (req, res) => {
     }
   });
   // Fetch all blogs posts for the logged-in user
-app.get('/fetchAllBlogs'/* , fetchUser */ , async (req, res) => {
-    /* const { userId } = req.user; */
+/* app.get('/fetchAllBlogs/:id', async (req, res) => {
+    const { userId } = req.user.id;
 
     try {
-        const posts = await Post.find(/* { user: userId } */);
+        const posts = await Post.find({ user: userId });
 
         if (!posts || posts.length === 0) {
             return res.status(404).json({ message: 'No posts found for this user' });
@@ -223,6 +223,18 @@ app.get('/fetchAllBlogs'/* , fetchUser */ , async (req, res) => {
         res.status(500).json({ message: 'Error retrieving posts' });
     }
 });
+ */
+app.get("/fetchBlogsByUser/:id", async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const blogs = await Blog.find({ user: userId });  // Assuming the Blog schema has a "user" field
+        res.status(200).json({ blogs });
+        } catch (error) {
+        console.error("Error fetching blogs for user:", error);
+        res.status(500).json({ message: "Error fetching blogs" });
+        }
+    });
+
 app.get('/posts/:id', async (req, res) => {
     try {
       const post = await Post.findById(req.params.id);  // Find blog by ID
@@ -234,6 +246,31 @@ app.get('/posts/:id', async (req, res) => {
         console.error(err);
         res.status(500).json({ message: 'Server error' });
     }
+    });
+    app.put('/updateBlog/:id', async (req, res) => {
+        const { id } = req.params.id;  // Extract the blog ID from the route parameters
+        const { title, description } = req.body;  // Assuming title and description are being updated
+    
+        try {
+            // Find the blog post by ID
+            const post = await Post.findById(id);
+    
+            if (!post) {
+                return res.status(404).json({ message: 'Post not found' });
+            }
+    
+            // Update the blog with the new data (title, description, etc.)
+            post.title = title || post.title;  // Only update if a new title is provided
+            post.description = description || post.description;  // Only update if a new description is provided
+            
+            // Save the updated blog post to the database
+            const updatedPost = await post.save();
+    
+            res.status(200).json({ message: 'Post updated successfully', updatedPost });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ message: 'Server error' });
+        }
     });
 
 app.listen(PORT, (req, res) =>{

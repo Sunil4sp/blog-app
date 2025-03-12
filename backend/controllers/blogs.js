@@ -3,10 +3,35 @@ const Blog = require('../models/Blog');
 const Comment = require('../models/Comment');
 const Tag = require('../models/Tag');
 
-module.exports.fetchAllBlogs = async(req, res) =>{
+/* module.exports.fetchAllBlogs = async(req, res) =>{
     const blogs = await Blog.find({});
     res.status(201).json({ blogs });
-};
+}; */
+
+module.exports.fetchBlogsByUser = async (req, res) => {
+    try {
+        const userId = req.params.id;  // Get the userId from the request parameters
+    
+        // Check if the user exists (optional but good practice to verify)
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found", status: "error" });
+        }
+    
+        // Fetch blogs that belong to the logged-in user
+        const blogs = await Blog.find({ user: userId });
+    
+        if (!blogs || blogs.length === 0) {
+            return res.status(404).json({ message: "No blogs found for this user", status: "error" });
+        }
+    
+        // Return the blogs to the frontend
+        res.status(200).json({ blogs });
+        } catch (error) {
+        console.error("Error fetching blogs for user:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+        }
+    };
 
 module.exports.addBlog = async (req, res) =>{
 
@@ -67,9 +92,9 @@ module.exports.deleteBlog = async (req, res) =>{
 
     if(blog.user !== userId){
         return res
-          .status(403)
-          .json({ message: "Forbidden, you cannot delete someone else blog",
-          status: "error" });
+            .status(403)
+            .json({ message: "Forbidden, you cannot delete someone else blog",
+            status: "error" });
     }
     await Blog.findByIdAndDelete(blogId);
 
@@ -84,8 +109,10 @@ module.exports.updateBlog = async (req, res) =>{
 
     try{
     const blogId = req.params.id;
-
     const userId = req.user.id;
+
+    console.log(blogId);
+    
 
     const blog = await Blog.findById(blogId);
 
@@ -94,11 +121,11 @@ module.exports.updateBlog = async (req, res) =>{
         status: "error" });
     }
 
-    if(blog.user !== userId){
+    if(blog.user.toString() !== userId){
         return res
-          .status(403)
-          .json({ message: "Forbidden, you cannot edit someone else blog",
-          status: "error" });
+        .status(403)
+        .json({ message: "Forbidden, you cannot edit someone else blog",
+        status: "error" });
     }
 
     if (req.body.title){
@@ -114,9 +141,10 @@ module.exports.updateBlog = async (req, res) =>{
         blog.imageUrl = req.body.imageUrl;
     }
     
-    await Blog.findByIdAndUpdate(blogId, blog);
+    /* await Blog.findByIdAndUpdate(blogId, blog);*/
+    const updatedBlog = await blog.save();
 
-    res.status(200).json({status:"Success", blog })
+    res.status(200).json({status:"Success", blog: updateBlog })
     } catch(e){
         console.log("error:"+ JSON.stringify(e));
         res.status(500).json({ message: "Internal Server Error"})
