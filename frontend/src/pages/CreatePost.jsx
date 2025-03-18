@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const CreatePost = () => {
+  const [username, setUsername] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [error, setError] = useState('');
@@ -20,7 +21,7 @@ const CreatePost = () => {
     // Make a request to create the post
     try {
       const response = await axios.post('http://localhost:8000/posts', 
-        { title, description }, 
+        { username, title, description }, 
         {
           headers: {
             Authorization: `Bearer ${token}`,

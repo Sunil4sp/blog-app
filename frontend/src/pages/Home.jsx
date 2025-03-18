@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-/*import CreatePost from './CreatePost';
- import Loader from '../components/Loader'; */
 import Login from './Login';
 import MyBlogs from './MyBlogs';
 
@@ -15,7 +13,6 @@ const Home = () => {
       // Make a request to get user details
       axios
         .get("http://localhost:8000/profile", {
-          // This should be the endpoint to get the user's profile
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -25,7 +22,6 @@ const Home = () => {
         })
         .catch((error) => {
           console.error("Error fetching user data", error);
-          // If error occurs (e.g., token expired), remove the token and set user to null
           localStorage.removeItem("token");
           setUser(null);
         });

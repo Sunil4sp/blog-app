@@ -64,12 +64,20 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
           {error && <div style={{ color: 'red' }}>{error}</div>}
-          <input
+          {/* <input
             type={"submit"}
             className="p-4 rounded-lg m-4 w-6/12"
             style={{ backgroundColor: "#a1eafb", cursor: "pointer"}}
             value="Login"
-          />
+          /> */}
+          <button
+            type='submit'
+              className="p-4 rounded-lg m-4 w-64"
+              style={{ backgroundColor: "#a1eafb" }}
+              onClick={onSubmit}
+            >
+             Login
+            </button>
           <h4>*if not having account</h4>
           <Link to="/register">
             <button

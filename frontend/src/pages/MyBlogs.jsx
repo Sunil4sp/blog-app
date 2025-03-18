@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from "react";
-/* import { useNavigate } from "react-router-dom"; */
 import axios from "axios";
 import { Link } from "react-router-dom";
 import {jwtDecode} from "jwt-decode";
 
 const MyBlogs = () => {
-  const [users, setUsers] = useState([]);
-  /* const [title, setTitle] = useState("");
-  const [description, setDescription] = useState(""); */
+  const [blogs, setBlogs] = useState([]);
   const [error, setError] = useState("");
-  /* const navigate = useNavigate(); */
 
   const getUserIdFromToken = () => {
     const token = localStorage.getItem("token");
@@ -17,24 +13,27 @@ const MyBlogs = () => {
       setError("You must be logged in to retrieve a post");
       return null;
     }
-    const decodedToken = jwtDecode(token); // Decode the JWT to get the user info
-    console.log('Decoded token:', decodedToken);
-    return decodedToken.id;  // Assuming the ID is in the "id" field of the token
+    try {
+      const decodedToken = jwtDecode(token);
+      console.log("Decoded token:", decodedToken);
+      return decodedToken?.id || decodedToken?._id || decodedToken?.userId; // Adjust if your ID is stored differently
+    } catch (error) {
+      console.error("Invalid token:", error);
+      setError("Invalid token");
+      return null;
+    }
   };
 
   const retrievePost = async () => {
-    /* const token = localStorage.getItem("token");
-    if (!token) {
-      setError("You must be logged in to retrieve a post");
-      return;
-    } */
+    
       const userId = getUserIdFromToken();  // Get the logged-in user ID from the token
       if (!userId) return;
-      console.log(userId);
+
+      console.log("Fetching blogs for user ID:", userId);
       
     try {
       const response = await axios.get(
-        `http://localhost:8000/fetchBlogsByUser/${userId}`,
+        `http://localhost:8000/blogs/fetchBlogsByUser/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -43,60 +42,24 @@ const MyBlogs = () => {
       );
 
       // Handle success
-      console.log("Post retrieved successfully:", response.data);
-      setUsers(response.data.blogs);
-      //navigate(`/myblogs/${response.data.userId}`);  // Redirect to user's blogs
+      console.log("API Response:", response.data);
+
+      if (response.data && Array.isArray(response.data.blogs)) {
+        setBlogs(response.data.blogs);
+      } else {
+        setBlogs([]);
+      }
     } catch (error) {
       console.error("Error retrieving post:", error);
-      setError(error.response?.data?.message || "Error retrieving post");
+      setError(error.response?.data?.message || "Error retrieving blogs");
     }
   };
-
-  /* const updateBlog = async (id, updatedData) => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setError("You must be logged in to update a blog.");
-      return;
-    }
-  
-    try {
-      await axios.put(`http://localhost:8000/updateBlog/${id}`, updatedData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      // After successful edit, maybe redirect or update the state
-    } catch (error) {
-      console.error("Error updating blog:", error);
-      setError(error.response?.data?.message || "Error updating blog");
-    }
-  };
-
-  const deleteBlog = async (blogId) => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setError("You must be logged in to delete a post");
-      return;
-    }
-
-    try {
-      await axios.delete(`http://localhost:8000/deleteBlog/${blogId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      // After deletion, re-fetch posts
-      setUsers((prevUsers) => prevUsers.filter((user) => user._id !== blogId));
-      console.log("Blog deleted successfully");
-    } catch (error) {
-      console.error("Error deleting blog:", error);
-      setError(error.response?.data?.message || "Error deleting blog");
-    }
-  }; */
 
   useEffect(() => {
-    retrievePost(); // Fetch posts when the component is mounted
+    const userId = getUserIdFromToken();
+    if (userId) {
+      retrievePost();
+    }
   }, []);
 
   return (
@@ -107,16 +70,21 @@ const MyBlogs = () => {
       <div className="text-center tracking-widest">My Blogs</div>
       <label className="underline tracking-wider">Blog's Title :</label>
       <div className="grid grid-flow-row auto-rows-auto border-2 border-solid">
-        {users.map((user) => (
-          <div
-            key={user._id}
+      {blogs.length > 0 ? (
+        <div className="grid grid-flow-row auto-rows-auto border-2 border-solid p-2">
+        {blogs.map((blog) => (
+          <div key={blog._id}
             className="grid grid-flow-col border-2 border-dashed tracking-wider hover:bg-gray-500 hover:tracking-widest"
           >
-            <Link to={`/blog/${user._id}`}>
-              <h3 className="hover:text-white">{user.title}</h3>
+            <Link to={`/blog/${blog._id}`}>
+              <h3 className="hover:text-white">{blog.title}</h3>
             </Link>
           </div>
         ))}
+        </div>
+      ) : (
+        <p className="text-center mt-4 text-gray-500">No blogs found.</p>
+      )}
         {/* <div className="grid grid-flow-col justify-center gap-4">
           <button onClick={(user) => updateBlog(user._id)} className="bg-sky-500 hover:bg-sky-700 hover:text-white px-4 py-2 w-fit rounded-lg shadow-md">
             Edit a blog
@@ -126,7 +94,7 @@ const MyBlogs = () => {
           </button>
         </div> */}
       </div>
-      {error && <p className="text-red-500">{error}</p>}
+      {error && <p className="text-red-500 text-center">{error}</p>}
     </div>
   );
 };
