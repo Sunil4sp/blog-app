@@ -12,16 +12,20 @@ module.exports.fetchBlogsByUser = async (req, res) => {
     try {
         const userId = req.params.id;  // Get the userId from the request parameters
     
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ message: "Invalid user ID", status: "error" });
+          }
+
         // Check if the user exists (optional but good practice to verify)
-        const user = await User.findById(userId);
-        if (!user) {
+        const userExists = await User.findById(userId);
+        if (!userExists) {
             return res.status(404).json({ message: "User not found", status: "error" });
         }
     
         // Fetch blogs that belong to the logged-in user
-        const blogs = await Blog.find({ user: userId });
+        const blogs = await Blog.find({ user: new mongoose.Types.ObjectId(userId) });
     
-        if (!blogs || blogs.length === 0) {
+        if (!blogs.length) {
             return res.status(404).json({ message: "No blogs found for this user", status: "error" });
         }
     
