@@ -8,9 +8,11 @@ const Tag = require('../models/Tag');
     res.status(201).json({ blogs });
 }; */
 
-module.exports.fetchBlogsByUser = async (req, res) => {
+module.exports.fetchBlogs = async (req, res) => {
     try {
         const userId = req.params.id;  // Get the userId from the request parameters
+        console.log(userId);
+        
     
         if (!mongoose.Types.ObjectId.isValid(userId)) {
             return res.status(400).json({ message: "Invalid user ID", status: "error" });
@@ -23,7 +25,7 @@ module.exports.fetchBlogsByUser = async (req, res) => {
         }
     
         // Fetch blogs that belong to the logged-in user
-        const blogs = await Blog.find({ user: new mongoose.Types.ObjectId(userId) });
+        const blogs = await Blog.find({ user: userId }).populate("user", "name email");
     
         if (!blogs.length) {
             return res.status(404).json({ message: "No blogs found for this user", status: "error" });

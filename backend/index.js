@@ -97,7 +97,6 @@ app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.json());
 
 app.get('/', async (req, res) =>{
-    console.log("Default Page");
     return res.status(200).json({message: "Default Page"});
 })
 
@@ -225,10 +224,12 @@ app.get("/profile",/* fetchUser, */ async (req, res) => {
     }
 });
  */
-app.get("/fetchBlogsByUser/:id", async (req, res) => {
+app.get("/fetchBlogs/:id", async (req, res) => {
     try {
         const userId = req.params.id;
-        const blogs = await Blog.find({ user: new mongoose.Types.ObjectId(userId) });  // Assuming the Blog schema has a "user" field
+        console.log("User ID:", userId);
+        
+        const blogs = await Post.find({ user: userId });  // Assuming the Blog schema has a "user" field
         res.status(200).json({ blogs });
         } catch (error) {
         console.error("Error fetching blogs for user:", error);
@@ -239,19 +240,19 @@ app.get("/fetchBlogsByUser/:id", async (req, res) => {
 app.get('/posts/:id', async (req, res) => {
     try {
         const user = await User.findById(req.params.id);
-        const post = await Post.findById(req.params.id);  // Find blog by ID
+        const postId = req.params.id;  // Find blog by ID
         if (user){ 
-            if (!post) {
+            if (!postId) {
                 return res.status(404).json({ message: 'Post not found' });
             }
-            res.status(200).json({ message: 'Post retrieved successfully', post }); }
+            res.status(200).json({ message: 'Post retrieved successfully', postId }); }
         } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error' });
     }
     });
-    app.put('/updateBlog/:id', async (req, res) => {
-        const { userId } = req.params.id;
+app.put('/updateBlog/:id', async (req, res) => {
+        /* const { userId } = req.params.id; */
         const { id } = req.params.id;  // Extract the blog ID from the route parameters
         const { title, description } = req.body;  // Assuming title and description are being updated
     
