@@ -39,7 +39,7 @@ const showMenu = () =>{
             {
               user ? (
               <h3> 
-                <Link to='/write'>{/* Write */}</Link>
+                <Link to='/create'>{/* Write */}</Link>
               </h3>
               ) : (
               <h3>

@@ -26,12 +26,12 @@ const App = () => {
         <Route exact path='/home' element= { <Home /> } />
         <Route exact path='/login' element= { <Login /> } />
         <Route exact path='/register' element= { <Register /> } />
-        <Route exact path='/write' element= { <CreatePost /> } />
+        <Route exact path='/create' element= { <CreatePost /> } />
         <Route exact path='/uploadProfilePicture/:id' element= { <ProfilePictureUpload /> } />
         <Route exact path='/edit/:id' element= { <EditPost /> } />
-        <Route exact path='/myblogs/:id' element= { <MyBlogs /> } />
+        <Route exact path='/fetchblogs/:id' element= { <MyBlogs /> } />
         <Route exact path='/profile/:id' element= { <Profile /> } />
-        <Route exact path='/blog/:id' element={ <BlogDetail /> } />
+        <Route exact path='/blogs/:id' element={ <BlogDetail /> } />
         <Route exact path='/' element= { <Home /> } />
       </Routes>
       </Suspense>

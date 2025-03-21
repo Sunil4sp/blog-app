@@ -30,11 +30,6 @@ const Register = () => {
     /* setUsers(""); */
   };
 
-  /* useEffect(()=>{
-    axios.post(URL + "/signup")
-    .then(response => setUsers(response.data))
-    .catch(error=> console.error("error fetching users:", error));
-  }, []) */
   return (
     <div className="bg-blue-50 flex flex-col items-center  px-6 md:container md:mx-auto px-4 columns-1 md:box-content h-auto w-auto p-4 border-2 mt-6">
       <h2 className="font-serif text-base font-normal text-opacity-100">

@@ -27,16 +27,18 @@ const MyBlogs = () => {
   const retrievePost = async () => {
     
       const userId = getUserIdFromToken();  // Get the logged-in user ID from the token
-      if (!userId) return;
-
+      if (!userId){ 
+        setError("User ID not found in token.");
+        return;
+        }
       console.log("Fetching blogs for user ID:", userId);
       
     try {
       const response = await axios.get(
-        `http://localhost:8000/blogs/fetchBlogsByUser/${userId}`,
+        `http://localhost:8000/fetchBlogs/${userId}`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer {localStorage.getItem("userId")}`/* ${userId}`*/,
           },
         }
       );
@@ -76,7 +78,7 @@ const MyBlogs = () => {
           <div key={blog._id}
             className="grid grid-flow-col border-2 border-dashed tracking-wider hover:bg-gray-500 hover:tracking-widest"
           >
-            <Link to={`/blog/${blog._id}`}>
+            <Link to={`/blogs/${blog._id}`}>
               <h3 className="hover:text-white">{blog.title}</h3>
             </Link>
           </div>

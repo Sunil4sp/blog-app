@@ -69,10 +69,10 @@ const Menu = ({setMenu}) => {
           <Link to={`/profile/${user._id}`} onClick={() => setMenu(false)}>Profile</Link>
         </h3>
         <h3 className="text-black text-sm hover:text-gray-500 cursor-pointer">
-          <Link to={"/write"} onClick={() => setMenu(false)}>Create blog</Link>
+          <Link to={"/create"} onClick={() => setMenu(false)}>Create blog</Link>
         </h3>
         <h3 className="text-black text-sm hover:text-gray-500 cursor-pointer">
-          <Link to={`/myblogs/${user._id}`} onClick={() => setMenu(false)}>My Blogs</Link>
+          <Link to={`/fetchblogs/${user._id}`} onClick={() => setMenu(false)}>My Blogs</Link>
         </h3>
       {/* Logout button is always visible if the user is logged in */}
         <h3

@@ -30,7 +30,7 @@ const CreatePost = () => {
 
       // Handle success
       console.log("Post created successfully:", response.data);
-      navigate(`/myblogs/${response.data.userId}`);  // Redirect to user's blogs
+      navigate(`/fetchblogs/${response.data.userId}`);  // Redirect to user's blogs
 
     } catch (error) {
       console.error('Error creating post:', error);
