@@ -54,11 +54,13 @@ const BlogDetail = () => {
     useEffect(() => {
         const fetchBlogDetail = async () => {
             try {
-            const response = await axios.get(`http://localhost:8000/posts/${id}`);  // Fetch the blog by ID
-            setBlog(response.data.post);
+                const response = await axios.get(`http://localhost:8000/post/${id}`);  // Fetch the blog by ID
+                setBlog(response.data.post);
+                console.log(response.data.post);
+                
             } catch (error) {
-            setError('Error retrieving blog details');
-            console.error(error);
+                setError('Error retrieving blog details');
+                console.error(error);
             }
         };
     
@@ -81,10 +83,10 @@ const BlogDetail = () => {
             <p>{blog.description}</p>
         </div>
         <div className="grid grid-flow-col justify-center gap-4">
-          <button onClick={(user) => updateBlog(user._id)} className="bg-sky-500 hover:bg-sky-700 hover:text-white px-4 py-2 w-fit rounded-lg shadow-md">
+          <button onClick={() => updateBlog(blog._id)} className="bg-sky-500 hover:bg-sky-700 hover:text-white px-4 py-2 w-fit rounded-lg shadow-md">
             Edit a blog
           </button>
-          <button onClick={(user) => deleteBlog(user._id)} className="bg-sky-500 hover:bg-sky-700 hover:text-white px-4 py-2 w-fit rounded-lg shadow-md">
+          <button onClick={() => deleteBlog(blog._id)} className="bg-sky-500 hover:bg-sky-700 hover:text-white px-4 py-2 w-fit rounded-lg shadow-md">
             Delete a blog
           </button>
         </div>

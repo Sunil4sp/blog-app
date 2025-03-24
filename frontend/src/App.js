@@ -31,7 +31,7 @@ const App = () => {
         <Route exact path='/edit/:id' element= { <EditPost /> } />
         <Route exact path='/fetchblogs/:id' element= { <MyBlogs /> } />
         <Route exact path='/profile/:id' element= { <Profile /> } />
-        <Route exact path='/blogs/:id' element={ <BlogDetail /> } />
+        <Route exact path='/post/:id' element={ <BlogDetail /> } />
         <Route exact path='/' element= { <Home /> } />
       </Routes>
       </Suspense>

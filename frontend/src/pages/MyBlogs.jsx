@@ -77,8 +77,8 @@ const MyBlogs = () => {
         {blogs.map((blog) => (
           <div key={blog._id}
             className="grid grid-flow-col border-2 border-dashed tracking-wider hover:bg-gray-500 hover:tracking-widest"
-          >
-            <Link to={`/blogs/${blog._id}`}>
+          > 
+            <Link to={`/post/${blog._id}`}>
               <h3 className="hover:text-white">{blog.title}</h3>
             </Link>
           </div>
