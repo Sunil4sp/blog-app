@@ -3,10 +3,20 @@ const Blog = require('../models/Blog');
 const Comment = require('../models/Comment');
 const Tag = require('../models/Tag');
 
-/* module.exports.fetchAllBlogs = async(req, res) =>{
-    const blogs = await Blog.find({});
-    res.status(201).json({ blogs });
-}; */
+module.exports.post = async(req, res) =>{
+    try{
+        const id = req.params.id;
+        const post = await Blog.findById(id);
+        if (!post) {
+            return res.status(404).json({ message: "Post not found" });
+        }
+        res.status(200).json({ post });
+    } catch(error){
+        console.error("Error fetching blogs for user:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+
 
 module.exports.fetchBlogs = async (req, res) => {
     try {

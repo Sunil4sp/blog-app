@@ -237,15 +237,15 @@ app.get("/fetchBlogs/:id", async (req, res) => {
         }
     });
 
-app.get('/posts/:id', async (req, res) => {
+app.get('/post/:id', async (req, res) => {
     try {
-        const user = await User.findById(req.params.id);
-        const postId = req.params.id;  // Find blog by ID
-        if (user){ 
-            if (!postId) {
+        const post = await Post.findById(req.params.id);
+        /* const postId = req.params.id; */  // Find blog by ID
+        /* if (user){  */
+            if (!post) {
                 return res.status(404).json({ message: 'Post not found' });
             }
-            res.status(200).json({ message: 'Post retrieved successfully', postId }); }
+            res.status(200).json({ message: 'Post retrieved successfully', post }); /* } */
         } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error' });

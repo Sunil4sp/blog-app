@@ -26,9 +26,11 @@ const fetchBlogs = async (req, res, next) =>{
 };
 
 const post = async (req, res, next) =>{
-    const id = req.params.id; /* Blog._id; */
     try{
-        const posts = await Blog.findById(id);
+        const posts = await Blog.findById(req.params.id);
+        if (!posts) {
+            return res.status(404).json({ message: "Post not found" });
+        }
         req.posts = posts;
         next();
     } catch(err){
