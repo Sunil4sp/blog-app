@@ -21,10 +21,9 @@ const Login = () => {
       });
 
       localStorage.setItem('token', response.data.token);
-
       console.log("Login Successful:", response.data);
       setIsLoggedIn(true);
-
+      alert("User Logged Successfully")
       navigate('/');
     } catch(err){
       console.error("Error logging in:", err);
@@ -64,12 +63,6 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
           {error && <div style={{ color: 'red' }}>{error}</div>}
-          {/* <input
-            type={"submit"}
-            className="p-4 rounded-lg m-4 w-6/12"
-            style={{ backgroundColor: "#a1eafb", cursor: "pointer"}}
-            value="Login"
-          /> */}
           <button
             type='submit'
               className="p-4 rounded-lg m-4 w-64"

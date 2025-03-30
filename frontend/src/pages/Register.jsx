@@ -20,6 +20,7 @@ const Register = () => {
       console.log("Registration Done:", response.data);
       // Update users state only after successful registration
       setUsers([...users, response.data]); // Assuming response has user data
+      alert("User Registered Successfully")
       // Clear form fields after successful registration (optional)
       reset();
     } catch (error) {
@@ -37,7 +38,7 @@ const Register = () => {
       </h2>
       <div className="md:container flex flex-col items-center justify-center m-4">
         <form
-          className="flex flex-col /* items-center justify-center */ m-4 w-6/12"
+          className="flex flex-col m-4 w-6/12"
           onSubmit={handleSubmit(onSubmit)}
         >
           <input
@@ -63,18 +64,17 @@ const Register = () => {
             className="border-2 p-4 rounded-lg m-4 mt-8 w-11/12 my-6"
             placeholder="Enter Password"
           />
-          <input
-            type={"submit"}
-            className="p-4 rounded-lg m-4 w-6/12"
-            style={{ backgroundColor: "#a1eafb" }}
-          />
+          <button
+            type="submit"
+            className=" bg-blue-300 p-4 rounded-lg m-4 w-60 md:w-64 md:mx-16"
+            onClick={onSubmit}
+          >Submit</button>
         </form>
         <Link to="/login">
-          <button type="submit" className="bg-blue-300 p-4 rounded-lg m-4 w-64">
+          <button type="submit" className="bg-blue-300 p-4 rounded-lg m-4 w-60">
             Login
           </button>
         </Link>
-        
       </div>
       {error && <div style={{ color: "red" }}>{error}</div>}
       {users.map((user) => (

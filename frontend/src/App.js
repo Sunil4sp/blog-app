@@ -20,11 +20,11 @@ const BlogDetail = lazy(() => import('./pages/BlogDetail'));
 const App = () => {
   return (
     <UserContextProvider>
-      <Header />
+      <Header /> 
       <Suspense fallback= {<Loader />}>
       <Routes>
         <Route exact path='/home' element= { <Home /> } />
-        <Route exact path='/login' element= { <Login /> } />
+        <Route exact path='/login' element= { <Login /> } /> 
         <Route exact path='/register' element= { <Register /> } />
         <Route exact path='/create' element= { <CreatePost /> } />
         <Route exact path='/uploadProfilePicture/:id' element= { <ProfilePictureUpload /> } />

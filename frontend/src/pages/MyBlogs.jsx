@@ -69,7 +69,7 @@ const MyBlogs = () => {
       className="md:container-md bg-slate-50 md:mx-auto px-4 bg-slate-50 columns-1 md:/* box-content */ h-auto w-3/4 p-4 mt-6 
       grid border-slate-100 bg-slate-50 dark:bg-slate-800 dark:border-slate-500 border-b rounded-t-xl"
     >
-      <div className="text-center tracking-widest">My Blogs</div>
+      <div className="text-center tracking-widest">My Blogs Space</div>
       <label className="underline tracking-wider">Blog's Title :</label>
       <div className="grid grid-flow-row auto-rows-auto border-2 border-solid">
       {blogs.length > 0 ? (
@@ -87,14 +87,7 @@ const MyBlogs = () => {
       ) : (
         <p className="text-center mt-4 text-gray-500">No blogs found.</p>
       )}
-        {/* <div className="grid grid-flow-col justify-center gap-4">
-          <button onClick={(user) => updateBlog(user._id)} className="bg-sky-500 hover:bg-sky-700 hover:text-white px-4 py-2 w-fit rounded-lg shadow-md">
-            Edit a blog
-          </button>
-          <button onClick={(user) => deleteBlog(user._id)} className="bg-sky-500 hover:bg-sky-700 hover:text-white px-4 py-2 w-fit rounded-lg shadow-md">
-            Delete a blog
-          </button>
-        </div> */}
+  
       </div>
       {error && <p className="text-red-500 text-center">{error}</p>}
     </div>
