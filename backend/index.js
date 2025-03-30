@@ -11,10 +11,7 @@ const app = express();
 const Post = require("./models/Blog");
 const path = require('path');
 const PORT = process.env.PORT || 8000;
-/*const { fetchUser } = require("./middlewares/fetchUser")
- const api = process.env.API_URL; */
 
-/* app.use(cors()) */
 const corsOptions = {
     origin: "*",
     credential: true
@@ -101,7 +98,7 @@ app.get('/', async (req, res) =>{
 })
 
 //endpoints
-app.post('/login', /* fetchUser, */ async (req, res) =>{
+app.post('/login', async (req, res) =>{
 
     const { email, password } = req.body;
 
@@ -133,7 +130,7 @@ app.post('/login', /* fetchUser, */ async (req, res) =>{
     }
 });
 
-app.post('/register', /* fetchUser, */ async(req, res) => {
+app.post('/register', async(req, res) => {
     const { username, email, password } = req.body;
 
     // Check if user already exists by email or username
@@ -206,24 +203,7 @@ app.get("/profile",/* fetchUser, */ async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
   });
-  // Fetch all blogs posts for the logged-in user
-/* app.get('/fetchAllBlogs/:id', async (req, res) => {
-    const { userId } = req.user.id;
-
-    try {
-        const posts = await Post.find({ user: userId });
-
-        if (!posts || posts.length === 0) {
-            return res.status(404).json({ message: 'No posts found for this user' });
-        }
-
-        res.status(200).json({ message: 'Posts retrieved successfully', posts });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Error retrieving posts' });
-    }
-});
- */
+  
 app.get("/fetchBlogs/:id", async (req, res) => {
     try {
         const userId = req.params.id;
@@ -253,7 +233,7 @@ app.get('/post/:id', async (req, res) => {
     });
 app.put('/updateBlog/:id', async (req, res) => {
         /* const { userId } = req.params.id; */
-        const { id } = req.params.id;  // Extract the blog ID from the route parameters
+        const { id } = req.params;  // Extract the blog ID from the route parameters
         const { title, description } = req.body;  // Assuming title and description are being updated
     
         try {
@@ -271,11 +251,39 @@ app.put('/updateBlog/:id', async (req, res) => {
             // Save the updated blog post to the database
             const updatedPost = await post.save();
     
-            res.status(200).json({ message: 'Post updated successfully', updatedPost });
+            res.status(200).json({ message: 'Post updated successfully', blog: updatedPost });
         } catch (err) {
             console.error(err);
             res.status(500).json({ message: 'Server error' });
         }
+    });
+app.delete('/deleteBlog/:id', async (req, res) => {
+        try{
+            const blogId = req.params.id;
+            /* res.json({blogId}); */
+            
+            const {userId} = req.user;
+        
+            const blog = await Blog.findById(blogId);
+        
+            if(!blog){
+                return res.status(404).json({ message: "Blog not found",
+                status: "error" });
+            }
+        
+            if(blog.user.toString() !== userId){
+                return res
+                    .status(403)
+                    .json({ message: "Forbidden, you cannot delete someone else blog",
+                    status: "error" });
+            }
+            await Blog.findByIdAndDelete(blogId);
+        
+            res.status(200).json({status:"Success", message: "Blog deleted successfully", blogId })
+            } catch(error){
+                console.error("Error deleting blog:", error);
+                res.status(500).json({ message: "Internal Server Error"})
+            } 
     });
 
 app.listen(PORT, (req, res) =>{

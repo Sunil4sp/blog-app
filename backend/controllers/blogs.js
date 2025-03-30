@@ -106,7 +106,7 @@ module.exports.deleteBlog = async (req, res) =>{
         status: "error" });
     }
 
-    if(blog.user !== userId){
+    if(blog.user.toString() !== userId){
         return res
             .status(403)
             .json({ message: "Forbidden, you cannot delete someone else blog",
@@ -114,9 +114,9 @@ module.exports.deleteBlog = async (req, res) =>{
     }
     await Blog.findByIdAndDelete(blogId);
 
-    res.status(200).json({status:"Success", blog })
-    } catch(e){
-        console.log("error:"+ JSON.stringify(e));
+    res.status(200).json({status:"Success", message: "Blog deleted successfully" })
+    } catch(error){
+        console.error("Error deleting blog:", error);
         res.status(500).json({ message: "Internal Server Error"})
     } 
 };

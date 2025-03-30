@@ -7,22 +7,17 @@ const {
   getComment,
   addComment,
   addVote,
-  /* fetchAllBlogs, */ fetchBlogsByUser,
+  fetchBlogsByUser,
 } = require("../controllers/blogs");
 
-/* const { fetchUser } = require("../middlewares/fetchUser"); */
+const { fetchUser } = require("../middlewares/fetchUser");
 
 const router = express.Router();
+router.use(fetchUser);
 
-/* router.use(fetchUser); */
-
-/* router.post('/', fetchAllBlogs); */
-/* router.get("/", fetchBlogsByUser); */
-
-router.get("/fetchBlogsByUser/:id", fetchBlogsByUser);
-
+router.get("/fetchBlogsByUser/:id", fetchUser, fetchBlogsByUser);
 router.post("/addblog/:id", addBlog);
-router.delete("/delete/:id", deleteBlog);
+router.delete("/deleteblog/:id", fetchUser, deleteBlog);
 router.put("/update/:id", updateBlog);
 router.post("/addcomment/:id", addComment);
 router.get("/getcomment/:id", getComment);

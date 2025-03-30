@@ -39,8 +39,8 @@ const post = async (req, res, next) =>{
     }
 }
 
-/* const edit = async (req, res, next) =>{
-    const id = req.params.id;/* Blog._id; 
+const edit = async (req, res, next) =>{
+    const id = req.params.id; Blog._id; 
     try{
         const editBlog = await Blog.findById(id);
         if (!editBlog) {
@@ -53,5 +53,6 @@ const post = async (req, res, next) =>{
         return res.status(500).json({ message: "Error editing blogs"});
     }
 }
- */
-module.exports = fetchBlogsByUser, post/* , edit */;
+
+
+module.exports = fetchBlogs, post, edit;
