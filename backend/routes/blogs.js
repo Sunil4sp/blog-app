@@ -16,11 +16,11 @@ const router = express.Router();
 router.use(fetchUser);
 
 router.get("/fetchBlogsByUser/:id", fetchUser, fetchBlogsByUser);
-router.post("/addblog/:id", addBlog);
-router.delete("/deleteblog/:id", fetchUser, deleteBlog);
-router.put("/update/:id", updateBlog);
-router.post("/addcomment/:id", addComment);
-router.get("/getcomment/:id", getComment);
+router.post("/addBlog/:id", addBlog);
+router.delete("/deleteBlog/:id", fetchUser, deleteBlog);
+router.put("/updateBlog/:id", updateBlog);
+router.post("/addComment/:id", addComment);
+router.get("/getComment/:id", getComment);
 router.post("/vote/:id", addVote);
 
 module.exports = router;

@@ -16,6 +16,10 @@ const blogSchema = new mongoose.Schema(
         type: [String],
         required: true,
     },
+    /* imageUrl: {
+        type: String,
+        default: "",
+    }, */
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",

@@ -172,9 +172,9 @@ app.get("/profile",/* fetchUser, */ async (req, res) => {
     
         res.json({ user: { ...user.toObject(), profilePicture: user.profilePicture } });
     } catch (error) {
-      res.status(401).json({ message: "Invalid or expired token" });
+        res.status(401).json({ message: "Invalid or expired token" });
     }
-  });
+    });
 
   app.post('/posts', async (req, res) => {          //post new blog
     const { title, description, tag, imageUrl } = req.body;
@@ -202,7 +202,7 @@ app.get("/profile",/* fetchUser, */ async (req, res) => {
         console.error(err);
         res.status(500).json({ message: 'Server error' });
     }
-  });
+    });
   
 app.get("/fetchBlogs/:id", async (req, res) => {
     try {
@@ -220,8 +220,7 @@ app.get("/fetchBlogs/:id", async (req, res) => {
 app.get('/post/:id', async (req, res) => {
     try {
         const post = await Post.findById(req.params.id);
-        /* const postId = req.params.id; */  // Find blog by ID
-        /* if (user){  */
+
             if (!post) {
                 return res.status(404).json({ message: 'Post not found' });
             }
@@ -232,7 +231,7 @@ app.get('/post/:id', async (req, res) => {
     }
     });
 app.put('/updateBlog/:id', async (req, res) => {
-        /* const { userId } = req.params.id; */
+
         const { id } = req.params;  // Extract the blog ID from the route parameters
         const { title, description } = req.body;  // Assuming title and description are being updated
     
@@ -257,12 +256,12 @@ app.put('/updateBlog/:id', async (req, res) => {
             res.status(500).json({ message: 'Server error' });
         }
     });
-app.delete('/deleteBlog/:id', async (req, res) => {
+
+/* app.delete('/deleteBlog/:id', async (req, res) => {
         try{
             const blogId = req.params.id;
-            /* res.json({blogId}); */
             
-            const {userId} = req.user;
+            const userId = req.user;
         
             const blog = await Blog.findById(blogId);
         
@@ -284,7 +283,7 @@ app.delete('/deleteBlog/:id', async (req, res) => {
                 console.error("Error deleting blog:", error);
                 res.status(500).json({ message: "Internal Server Error"})
             } 
-    });
+    }); */
 
 app.listen(PORT, (req, res) =>{
     ConnectDB();

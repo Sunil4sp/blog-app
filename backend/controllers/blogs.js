@@ -100,21 +100,21 @@ module.exports.deleteBlog = async (req, res) =>{
     const userId = req.user.id;
 
     const blog = await Blog.findById(blogId);
+    /* res.json({blog}); */
 
     if(!blog){
-        return res.status(404).json({ message: "Blog not found",
-        status: "error" });
+        return res.status(404).json({ message: "Blog not found"});
     }
 
     if(blog.user.toString() !== userId){
         return res
             .status(403)
-            .json({ message: "Forbidden, you cannot delete someone else blog",
-            status: "error" });
+            .json({ message: "Forbidden, you cannot delete someone else blog" });
     }
+
     await Blog.findByIdAndDelete(blogId);
 
-    res.status(200).json({status:"Success", message: "Blog deleted successfully" })
+    res.status(200).json({ message: "Blog deleted successfully" })
     } catch(error){
         console.error("Error deleting blog:", error);
         res.status(500).json({ message: "Internal Server Error"})
