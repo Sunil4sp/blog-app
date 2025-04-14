@@ -2,8 +2,6 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import {Link, useNavigate } from 'react-router-dom';
 import Loader from '../components/Loader';
-/* import ProfilePictureUpload from './ProfilePictureUpload'; */
-/* import avatar from '../images/Profile.jpg'; */
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -38,7 +36,7 @@ const Profile = () => {
     {user ? (
       <>
         <div className='flex flex-row border-0 bg-orange-50'>
-          <div className=''></div>
+          <div className='grid grid'></div>
           <div className='basis-1/4 border-r-2'>
               <div className='rounded-full p-8 flex flex-col grid justify-items-center'>
                 {user.imageUrl ?(

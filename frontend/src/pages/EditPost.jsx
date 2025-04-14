@@ -46,8 +46,8 @@ const EditPost = () => {
     }
   };
 
-  if (error) return <p>{error}</p>;
-  if (!blog) return <p>Loading...</p>; 
+  if (error) return <p className="text-center tracking-widest text-red">{error}</p>;
+  if (!blog) return <p className="text-center tracking-widest">Loading...</p>; 
 
   return (
     <div className="md:container-md bg-slate-50 md:mx-auto px-4 bg-slate-50 columns-1 md:box-content h-auto w-3/4 p-4 mt-6 

@@ -48,7 +48,7 @@ const BlogDetail = () => {
         }
     };
 
-    if (error) return <p>{error}</p>;
+    if (error) return <p className='text-center tracking-widest'>{error}</p>;
     if (!blog) return <p>Loading...</p>;
 
     return (
@@ -56,7 +56,7 @@ const BlogDetail = () => {
         className="md:container-md bg-slate-50 md:mx-auto px-4 bg-slate-50 columns-1 md:box-content h-auto w-3/4 p-4 mt-6 
         grid border-slate-100 bg-slate-50 border-2 border-solid p-4 m-2px dark:bg-slate-800 dark:border-slate-500 border-b rounded-t-xl"
         >
-        <div className="text-center tracking-widest">Blog Details</div>
+        <div className="text-center tracking-widest text-red">Blog Details</div>
         <label>Title:</label>
         <div className="grid grid-flow-row auto-rows-auto border-2 border-solid p-4 m-2px font-semibold">
             <h1>{blog.title}</h1>

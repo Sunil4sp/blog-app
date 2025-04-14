@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "../App.css";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [users, setUsers] = useState([]);
@@ -13,6 +13,7 @@ const Register = () => {
     formState: { errors },
   } = useForm();
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const onSubmit = async (data) => {
     try {
@@ -21,6 +22,7 @@ const Register = () => {
       // Update users state only after successful registration
       setUsers([...users, response.data]); // Assuming response has user data
       alert("User Registered Successfully")
+      navigate('/login');
       // Clear form fields after successful registration (optional)
       reset();
     } catch (error) {

@@ -66,7 +66,7 @@ const ProfilePictureUpload = () => {
     };
 
     return (
-        <div className="md:container-sm md:mx-auto px-4 bg-orange-50 columns-1 md:box-content h-32 w-96 p-4 mt-6 grid border-slate-100 bg-orange-50 dark:bg-slate-800 dark:border-slate-500 border-b rounded-t-xl">
+        <div className="md:container-sm h-60 md:mx-auto px-4 bg-blue-50 columns-1 md:box-content h-32 w-96 p-4 mt-6 grid border-slate-100 bg-blue-50 dark:bg-slate-800 dark:border-slate-500 border-b rounded-t-xl">
         <h3>Upload Profile Picture</h3>
         {preview && (
             <div>

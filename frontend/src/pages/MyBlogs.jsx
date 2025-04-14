@@ -15,7 +15,7 @@ const MyBlogs = () => {
     }
     try {
       const decodedToken = jwtDecode(token);
-      console.log("Decoded token:", decodedToken);
+      /* console.log("Decoded token:", decodedToken); */
       return decodedToken?.id || decodedToken?._id || decodedToken?.userId; // Adjust if your ID is stored differently
     } catch (error) {
       console.error("Invalid token:", error);

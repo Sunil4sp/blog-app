@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 const CreatePost = () => {
+  const { id } = useParams();
   const [username, setUsername] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -37,6 +38,8 @@ const CreatePost = () => {
       setError(error.response?.data?.message || 'Error creating post');
     }
   };
+
+  
   return (
     <>
       <div className="md:container-sm bg-slate-50 md:mx-auto bg-slate-50 columns-1 md:box-content h-auto w-3/4 mt-6 grid border-slate-100 bg-slate-50 dark:bg-slate-800 dark:border-slate-500 border-b rounded-t-xl">
@@ -60,6 +63,7 @@ const CreatePost = () => {
             onChange={(e) => setDescription(e.target.value)}
           ></textarea>
         </div>
+
         {error && <div style={{ color: "red" }}>{error}</div>}{" "}
         {/* Error message */}
         <div className="md:container md:mx-auto px-4 mb-6 flex flex-row items-center justify-center bg-slate-50 gap-4">
@@ -68,10 +72,6 @@ const CreatePost = () => {
             className="bg-sky-500 hover:bg-sky-700 hover:text-white px-4 py-2 shadow-md rounded-lg shadow-md">
             Post
           </button>
-          {/* <button 
-            className="bg-sky-500 hover:bg-sky-700 hover:text-white px-4 py-2 shadow-md rounded-lg shadow-md">
-            Edit
-          </button> */}
         </div>
       </div>
     </>
