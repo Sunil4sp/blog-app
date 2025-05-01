@@ -47,8 +47,9 @@ const Register = () => {
             type="text"
             {...register("username")}
             className="border-2 p-4 rounded-lg m-4 w-11/12"
-            placeholder="Enter username"
+            placeholder="Enter name"
           />
+          
           <input
             type="email"
             {...register("email", { required: true })}

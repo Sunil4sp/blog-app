@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Login = () => {
-  const [uname, setUname] = useState('');
+  const [username, setUname] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
@@ -15,7 +15,7 @@ const Login = () => {
     e.preventDefault();
     try{
       const response = await axios.post('http://localhost:8000/login',
-      { username: uname, 
+      { username: username, 
         email: email, 
         password: password
       });
@@ -24,7 +24,7 @@ const Login = () => {
       console.log("Login Successful:", response.data);
       setIsLoggedIn(true);
       alert("User Logged Successfully")
-      navigate('/');
+      navigate('/fetchblogs/:id');
     } catch(err){
       console.error("Error logging in:", err);
       setError(err.response?.data?.message || "Login failed");
@@ -45,7 +45,7 @@ const Login = () => {
             type="text"
             className="border-2 p-4 rounded-lg m-4 w-11/12"
             placeholder="Enter username"
-            value={uname}
+            value={username}
             onChange={(e) =>setUname(e.target.value)}
           />
           <input

@@ -39,23 +39,14 @@ const showMenu = () =>{
             {
               user ? (
               <h3> 
-                <Link to='/create'>{/* Write */}</Link>
+                <Link to='/fetchblogs/:id'>My blog</Link>
               </h3>
               ) : (
               <h3>
                 <Link to='/login'>Login</Link>
               </h3>)
             }
-            {/* {user ? (
-            <div className="cursor-pointer relative">
-              <FaBars /* className="cursor-pointer" onClick={showMenu} />
-              {menu && <Menu setMenu={setMenu} />}
-            </div>
-          ) : (
-            <h3>
-              <Link to="/register">Register</Link>
-            </h3>
-          )} */}
+            
             { user ? (
               <div onClick={showMenu}>
               <p className='cursor-pointer relative'></p>

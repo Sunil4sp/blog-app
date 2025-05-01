@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
+import ThumbDownOffAltOutlinedIcon from '@mui/icons-material/ThumbDownOffAltOutlined';
+import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 
 const BlogDetail = () => {
     const { id } = useParams(); // Get the blog ID from the URL
-    const [users, setUsers] = useState([]);
+    /* const [users, setUsers] = useState([]); */
     const [blog, setBlog] = useState(null);
     const [error, setError] = useState("");
     const navigate = useNavigate();
@@ -39,7 +42,7 @@ const BlogDetail = () => {
         });
 
     // After deletion, re-fetch posts
-        setUsers((prevUsers) => prevUsers.filter((user) => user._id !== id));
+        /* setUsers((prevUsers) => prevUsers.filter((user) => user._id !== id)); */
         alert("Blog deleted successfully");
         navigate("/");
         } catch (error) {
@@ -79,6 +82,11 @@ const BlogDetail = () => {
             >
             Delete a blog
             </button>
+            <div className='px-4 py-4'>
+                <ThumbUpAltOutlinedIcon />
+                <ThumbDownOffAltOutlinedIcon />
+                <ModeCommentOutlinedIcon />
+            </div>
         </div>
         </div>
     );

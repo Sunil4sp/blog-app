@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-/* import { UserContext } from "../context/UserContext";
-import { useContext } from "react"; */
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -54,7 +52,7 @@ const Menu = ({setMenu}) => {
       {/* If the user is not logged in, show Login and Register */}
       {!user && (
         <>
-        <h3 className="text-black text-sm hover:text-gray-500 cursor-pointer outline-dotted outline-stone-100 outline-white">
+        <h3 className="text-black text-sm hover:text-gray-500 cursor-pointer /*outline-dotted*/  outline-stone-100 outline-white">
           <Link to="/login" onClick={() => setMenu(false)}>Login</Link>
         </h3>
         <h3 className="text-black text-sm hover:text-gray-500 cursor-pointer">
