@@ -5,12 +5,12 @@ const secretKey = "MilestoneProject";
 const bcrypt = require("bcrypt");
 
 const createUser = async (req, res) =>{
-    const { username, password, email } = req.body;
+    const { username, uname, password, email } = req.body;
     try{
-        const userInput = new User({username, password, email});
+        const userInput = new User({username, uname, password, email});
         const user = await userInput.save();
         const token = jwt.sign(
-            { username: user.username, userId: user._id },
+            { username: user.username, email: user.email, userId: user._id },
             secretKey
             );
             return res
@@ -24,12 +24,12 @@ const createUser = async (req, res) =>{
 };
 
 const loginUser = async ( req, res) => {
-    const { username, password } = req.body;
+    const { username, email, password } = req.body;
     try{
-        if(!username || !password){
+        if(!username || !email || !password){
             return res
             .status(401)
-            .json({ message: "username/password cannot be empty", 
+            .json({ message: "username/email/password cannot be empty", 
             status: "error"});
         }
         const user = await User.findOne({ username });
@@ -48,7 +48,7 @@ const loginUser = async ( req, res) => {
                 status: "error"});
             
             const token = jwt.sign(
-                { username: user.username, userId: user._id },
+                { username: user.username,  email: user.email, userId: user._id },
                 secretKey
                 );
                 return res

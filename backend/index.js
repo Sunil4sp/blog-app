@@ -10,6 +10,7 @@ const bcrypt = require("bcrypt");
 const app = express();
 const Post = require("./models/Blog");
 const path = require('path');
+const fs = require('fs');
 const PORT = process.env.PORT || 8000;
 
 const corsOptions = {
@@ -32,62 +33,50 @@ const ConnectDB = async() =>{
 
 // Multer configuration to save files
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, 'uploads/'); // You can change the folder where images will be saved
+    destination: function (req, file, cb) {
+        const uploadPath = path.join(__dirname, '../uploads/');
+        if (!fs.existsSync(uploadPath)) fs.mkdirSync(uploadPath);
+        cb(null, uploadPath);
     },
-    filename: (req, file, cb) => {
-      cb(null, Date.now() + path.extname(file.originalname)); // Generate unique file name
-    },
-    });
-    
-    const upload = multer({ 
-        storage,
-        limits: { fileSize: 5 * 1024 * 1024},    
-    });
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const ext = path.extname(file.originalname);
+        cb(null, file.fieldname + '-' + uniqueSuffix + ext);
+    }
+  });
+  const upload = multer({ storage });
     
     // Route to handle profile picture upload
-app.post(`/uploadProfilePicture/:userId`, upload.single('profilePicture'), async (req, res) => {
-        try {
-        const userId = req.params.userId;
-        console.log("User ID from URL:", userId);
-
-        const token = req.headers.authorization?.split(' ')[1];
-    
-        if (!token) {
-            return res.status(401).json({ message: 'No token provided' });
-        }
-    
-        const decoded = jwt.verify(token, 'your_secret_key');
-        console.log("Decoded Token:", decoded);
-        console.log('Provided userId:', userId);
-
-        if (decoded.userId !== userId) {
-            console.log(`Token userId (${decoded.userId}) does not match URL userId (${userId})`);
-            return res.status(403).json({ message: 'You are not authorized to update this profile' });
-        }
-    
-        const imageUrl = `http://localhost:8000/uploads/${req.file.filename}`;
-    
-        // Update user's profile picture URL
-        const updatedUser = await User.findByIdAndUpdate(
-            userId,
-            { profilePicture: imageUrl },
-            { new: true }
-        );
-    
-        res.json({
-            message: 'Profile picture uploaded successfully',
-            user: updatedUser,
-            imageUrl,
+app.post('/uploadProfilePicture/:id', upload.single('profilePicture'), async (req, res) => {
+            const userId = req.params.id;
+        
+            if (!req.file) {
+            return res.status(400).json({ error: 'No file uploaded' });
+            }
+        
+            const imageUrl = `http://localhost:8000/uploads/${req.file.filename}`;
+        
+            try {
+            const user = await User.findByIdAndUpdate(
+                userId,
+                { profilePicture: imageUrl },
+                { new: true } // Return the updated user
+            );
+        
+            if (!user) {
+                return res.status(404).json({ error: 'User not found' });
+            }
+        
+            res.json({ message: 'Profile picture uploaded successfully', imageUrl });
+            } catch (err) {
+            console.error('Upload error:', err);
+            res.status(500).json({ error: 'Server error during upload' });
+            }
         });
-        } catch (error) {
-        console.error('Error uploading profile picture:', error);
-        res.status(500).json({ message: 'Error uploading profile picture' });
-        }
-    });
+        
     
     // Serve static files (image files)
-app.use('/uploads', express.static('uploads'));
+    app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
     
 
 //middleware to handle json request body
@@ -142,7 +131,7 @@ app.post('/register', async(req, res) => {
     const newUser = new User({
         username,
         email,
-        password
+        password,
     })
     try{
         await newUser.save();
@@ -176,8 +165,33 @@ app.get("/profile",/* fetchUser, */ async (req, res) => {
     }
     });
 
+app.put('/editProfile', async (req, res) => {
+
+    try {
+        const token = req.headers.authorization?.split(" ")[1];
+        if (!token) return res.status(401).json({ message: "No token provided" });
+    
+        const decoded = jwt.verify(token, 'your_secret_key');
+        const userId = decoded.userId;
+    
+        const { username, password, imageUrl } = req.body;
+    
+        const updateData = {};
+        if (username) updateData.username = username;
+        if (imageUrl) updateData.imageUrl = imageUrl;
+        if (password) updateData.password = await bcrypt.hash(password, 10);
+    
+        const updatedUser = await User.findByIdAndUpdate(userId, updateData, { new: true });
+    
+        res.json({ user: updatedUser });
+    } catch (err) {
+        console.error("Error updating profile:", err);
+        res.status(500).json({ message: "Error updating profile" });
+    }
+});
+
   app.post('/posts', async (req, res) => {          //post new blog
-    const { title, description, tag, imageUrl } = req.body;
+    const { title, description, tag } = req.body;
     const token = req.headers['authorization'].split(' ')[1]; // Extract token
     if (!token) return res.status(401).json({ message: 'No token provided' });
   
@@ -191,7 +205,6 @@ app.get("/profile",/* fetchUser, */ async (req, res) => {
             title, 
             description, 
             tag,
-            imageUrl,
             user: userId,
             /* username: decoded.username */
         });
@@ -257,13 +270,14 @@ app.put('/updateBlog/:id', async (req, res) => {
         }
     });
 
-/* app.delete('/deleteBlog/:id', async (req, res) => {
+app.delete('/deleteBlog/:id', async (req, res) => {
         try{
             const blogId = req.params.id;
             
             const userId = req.user;
         
-            const blog = await Blog.findById(blogId);
+            const blog = await Post.findById(blogId);
+            console.log(blogId, blog);
         
             if(!blog){
                 return res.status(404).json({ message: "Blog not found",
@@ -276,14 +290,14 @@ app.put('/updateBlog/:id', async (req, res) => {
                     .json({ message: "Forbidden, you cannot delete someone else blog",
                     status: "error" });
             }
-            await Blog.findByIdAndDelete(blogId);
+            await Post.findByIdAndDelete(blog);
         
             res.status(200).json({status:"Success", message: "Blog deleted successfully", blogId })
             } catch(error){
                 console.error("Error deleting blog:", error);
                 res.status(500).json({ message: "Internal Server Error"})
             } 
-    }); */
+    });
 
 app.listen(PORT, (req, res) =>{
     ConnectDB();

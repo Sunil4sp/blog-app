@@ -100,7 +100,7 @@ module.exports.deleteBlog = async (req, res) =>{
     const userId = req.user.id;
 
     const blog = await Blog.findById(blogId);
-    /* res.json({blog}); */
+    console.log(blog);
 
     if(!blog){
         return res.status(404).json({ message: "Blog not found"});
@@ -160,7 +160,7 @@ module.exports.updateBlog = async (req, res) =>{
     /* await Blog.findByIdAndUpdate(blogId, blog);*/
     const updatedBlog = await blog.save();
 
-    res.status(200).json({status:"Success", blog: updateBlog })
+    res.status(200).json({status:"Success", blog: updatedBlog })
     } catch(e){
         console.log("error:"+ JSON.stringify(e));
         res.status(500).json({ message: "Internal Server Error"})

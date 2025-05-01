@@ -14,12 +14,8 @@ const blogSchema = new mongoose.Schema(
     },
     tag: {
         type: [String],
-        required: true,
+        /* required: true, */
     },
-    /* imageUrl: {
-        type: String,
-        default: "",
-    }, */
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",

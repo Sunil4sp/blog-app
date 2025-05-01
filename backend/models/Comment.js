@@ -1,6 +1,4 @@
 const mongoose = require("mongoose");
-const User = require("./User");
-const Blog = require("./Blog");
 
 const commentSchema  = new mongoose.Schema({
     user: {
