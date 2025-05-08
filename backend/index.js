@@ -98,7 +98,7 @@ app.post('/login', async (req, res) =>{
         
         //If no user found return error
         if(!user){
-            return res.status(401).json({message:"Invalid Credential"});
+            return res.status(401).json({message:"No User"});
         }
         //Compare passowrd
         const isMatch = await bcrypt.compare(password, user.password);

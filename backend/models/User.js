@@ -22,7 +22,7 @@ const userSchema  = new mongoose.Schema({
     },
     imageUrl: {
             type: String,
-            default: "",
+            default: "https://media.licdn.com/dms/image/v2/D4D03AQH5fX-1hC1fiA/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1676646556620?e=1751500800&v=beta&t=re_1AzkJ-dibj9OVzDBJFQxU-OQfI37oMDiBRzMK0HU",
         },
     later: [
         {
