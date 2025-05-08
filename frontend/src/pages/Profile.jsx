@@ -157,7 +157,7 @@ const Profile = () => {
                     className="border rounded p-2 w-full"
                   />
                 </div>
-                <div>
+                {/* <div>
                   <label className="block">Image URL:</label>
                   <input
                     type="text"
@@ -165,7 +165,7 @@ const Profile = () => {
                     onChange={(e) => setImgurl(e.target.value)}
                     className="border rounded p-2 w-full"
                   />
-                </div>
+                </div> */}
                 <div>
                   <label className="block">Password:</label>
                   <input

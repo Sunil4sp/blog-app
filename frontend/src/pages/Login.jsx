@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Login = () => {
-  const [username, setUname] = useState('');
+  /* const [username, setUname] = useState(''); */
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
@@ -15,7 +15,7 @@ const Login = () => {
     e.preventDefault();
     try{
       const response = await axios.post('http://localhost:8000/login',
-      { username: username, 
+      { /* username: username,  */
         email: email, 
         password: password
       });
@@ -24,7 +24,7 @@ const Login = () => {
       console.log("Login Successful:", response.data);
       setIsLoggedIn(true);
       alert("User Logged Successfully")
-      navigate('/fetchblogs/:id');
+      navigate(`/fetchblogs/:id`);
     } catch(err){
       console.error("Error logging in:", err);
       setError(err.response?.data?.message || "Login failed");
@@ -41,13 +41,13 @@ const Login = () => {
           className="flex flex-col items-center justify-center m-4 w-6/12"
           onSubmit={onSubmit}
         >
-          <input
+          {/* <input
             type="text"
             className="border-2 p-4 rounded-lg m-4 w-11/12"
             placeholder="Enter username"
             value={username}
             onChange={(e) =>setUname(e.target.value)}
-          />
+          /> */}
           <input
             type="email"
             className="border-2 p-4 rounded-lg m-4 mb-2 w-11/12"
@@ -69,9 +69,10 @@ const Login = () => {
               style={{ backgroundColor: "#a1eafb" }}
               onClick={onSubmit}
             >
-             Login
+          Login
             </button>
           <h4>*if not having account</h4>
+          <Link>Forget Password</Link>
           <Link to="/register">
             <button
               className="p-4 rounded-lg m-4 w-64"

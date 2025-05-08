@@ -30,7 +30,7 @@ const showMenu = () =>{
         
         { /* path === '/' && */ <div onChange={(e) => setPrompt(e.target.value)} className='flex justify-center items-center space-x-0'>
           <input className='outline outline-1 rounded-l-md px-3 text-black bg-white' placeholder='Search a post' type='text'/>
-          <p onClick={() => navigate(prompt ? "search?q=" + prompt : navigate("/")) } className='cursor-pointer outline outline-1 py-1 px-1 bg-white text-black rounded-r-md'>
+          <p onClick={() => navigate(prompt ? "search?q=" + prompt : navigate(`/fetchblogs/${user._id}`)) } className='cursor-pointer outline outline-1 py-1 px-1 bg-white text-black rounded-r-md'>
             <BsSearch />
           </p>
           </div>}
@@ -39,11 +39,11 @@ const showMenu = () =>{
             {
               user ? (
               <h3> 
-                <Link to='/fetchblogs/:id'>My blog</Link>
+                <Link to={`/fetchblogs/${user._id}`}>My blog</Link>
               </h3>
               ) : (
               <h3>
-                <Link to='/login'>Login</Link>
+                <Link to={'/login'}>Login</Link>
               </h3>)
             }
             
