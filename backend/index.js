@@ -223,13 +223,14 @@ app.get('/fetchAllBlogs', async (req, res) => {
     /* const { userId } = req.user; */
 
     try {
-        const posts = await Post.find();
+        const blogs = await Post.find();
+        /* console.log(blogs); */
 
-        if (!posts || posts.length === 0) {
-            return res.status(404).json({ message: 'No posts found for this user' });
+        if (!blogs || blogs.length === 0) {
+            return res.status(404).json({ message: 'No posts found for any user' });
         }
 
-        res.status(200).json({ message: 'Posts retrieved successfully', posts });
+        res.status(200).json({ message: 'Posts retrieved successfully', blogs });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Error retrieving posts' });
@@ -239,7 +240,7 @@ app.get('/fetchAllBlogs', async (req, res) => {
 app.get("/fetchBlogs/:id", async (req, res) => {
     try {
         const userId = req.params.id;
-        console.log("User ID:", userId);
+        /* console.log("User ID:", userId); */
         
         const blogs = await Post.find({ user: userId });  // Assuming the Blog schema has a "user" field
         res.status(200).json({ blogs });

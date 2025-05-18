@@ -17,6 +17,10 @@ module.exports.post = async(req, res) =>{
     }
 };
 
+module.exports.fetchAllBlogs = async (req, res) =>{
+    const blogs = await Blog.find({});
+    res.status(201).json({ blogs });
+};
 
 module.exports.fetchBlogs = async (req, res) => {
     try {
