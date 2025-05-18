@@ -22,8 +22,14 @@ const blogSchema = new mongoose.Schema(
         required: true,
     },
     username: String,
-    upvote: Number,
-    downvote: Number,
+    upvote: {
+        type: Number,
+        default: 0
+    },
+    downvote: {
+        type: Number,
+        default: 0
+    },
     votedBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",

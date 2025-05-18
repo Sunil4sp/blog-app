@@ -11,6 +11,7 @@ const app = express();
 const Post = require("./models/Blog");
 const path = require('path');
 const fs = require('fs');
+/* const fetchUser = require('./middlewares/fetchUser'); */
 const PORT = process.env.PORT || 8000;
 
 const corsOptions = {
@@ -137,7 +138,7 @@ app.post('/register', async(req, res) => {
         await newUser.save();
         res.status(201).json({
             message: "User registered successfully",
-            user: { id: newUser._id, username: newUser.username, email: newUser.email, password: newUser.password }
+            user: { id: newUser._id, username: newUser.username, email: newUser.email/* , password: newUser.password */ }
         });
     } catch(err){
         console.error("Error during registration:", err);
@@ -150,7 +151,7 @@ app.get("/logout", (req, res)=> {
     res.status(200).json({ message: "Logged out successfully."});
 });
 
-app.get("/profile",/* fetchUser, */ async (req, res) => {
+app.get("/profile", /* fetchUser, */ async (req, res) => {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) return res.status(401).json({ message: "No token provided" });
   
@@ -165,7 +166,7 @@ app.get("/profile",/* fetchUser, */ async (req, res) => {
     }
     });
 
-app.put('/editProfile', async (req, res) => {
+app.put('/editProfile', /* fetchUser, */ async (req, res) => {
 
     try {
         const token = req.headers.authorization?.split(" ")[1];
@@ -190,7 +191,7 @@ app.put('/editProfile', async (req, res) => {
     }
 });
 
-  app.post('/posts', async (req, res) => {          //post new blog
+  app.post('/posts', /* fetchUser, */ async (req, res) => {          //post new blog
     const { title, description, tag } = req.body;
     const token = req.headers['authorization'].split(' ')[1]; // Extract token
     if (!token) return res.status(401).json({ message: 'No token provided' });
@@ -217,6 +218,24 @@ app.put('/editProfile', async (req, res) => {
     }
     });
   
+// Fetch all blogs posts for the logged-in user
+app.get('/fetchAllBlogs', async (req, res) => {
+    /* const { userId } = req.user; */
+
+    try {
+        const posts = await Post.find();
+
+        if (!posts || posts.length === 0) {
+            return res.status(404).json({ message: 'No posts found for this user' });
+        }
+
+        res.status(200).json({ message: 'Posts retrieved successfully', posts });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Error retrieving posts' });
+    }
+});
+
 app.get("/fetchBlogs/:id", async (req, res) => {
     try {
         const userId = req.params.id;
@@ -230,7 +249,7 @@ app.get("/fetchBlogs/:id", async (req, res) => {
         }
     });
 
-app.get('/post/:id', async (req, res) => {
+app.get('/post/:id', /* fetchUser, */ async (req, res) => {
     try {
         const post = await Post.findById(req.params.id);
 
@@ -270,11 +289,11 @@ app.put('/updateBlog/:id', async (req, res) => {
         }
     });
 
-app.delete('/deleteBlog/:id', async (req, res) => {
+app.delete('/deleteBlog/:id', /* fetchUser, */ async (req, res) => {
         try{
             const blogId = req.params.id;
             
-            const userId = req.user;
+            const userId = req.user.id;
         
             const blog = await Post.findById(blogId);
             console.log(blogId, blog);
@@ -297,6 +316,53 @@ app.delete('/deleteBlog/:id', async (req, res) => {
                 console.error("Error deleting blog:", error);
                 res.status(500).json({ message: "Internal Server Error"})
             } 
+    });
+
+app.post('/addVote/:id', /* fetchUser, */ async (req, res) => {  
+        try{
+            const blogId = req.params.id;
+            const token = req.headers.authorization?.split(" ")[1];
+            if (!token) return res.status(401).json({ message: "No token provided" });
+
+            const decoded = jwt.verify(token, 'your_secret_key');
+            const userId = decoded.userId;
+
+            const { voteType } = req.body;
+        
+            const blog = await Post.findById(blogId);
+            console.log("Blog: ",blog);
+        
+            if(!blog){
+                return res.status(404).json({message: "Blog not found", status:"error"});
+            }
+        
+            //check if user has already voted
+            if(blog.votedBy.includes(userId)){
+                return res.status(400)
+                .json({message: "User has already voted", status:"error"});
+            }
+            /* blog.upvote = voteType === 'upvote'? blog.upvote+1 :
+            blog.upvote;
+            blog.downvote = voteType === 'downvote'? blog.downvote+1 :
+            blog.downvote; */
+        
+            if (voteType === 'upvote') {
+                blog.upvote += 1;
+                } else if (voteType === 'downvote') {
+                    blog.downvote += 1;
+                    if (blog.upvote > 0) blog.upvote -= 1; // reduce one like if downvoted
+                } else {
+                    return res.status(400).json({ message: "Invalid vote type" });
+                }
+        
+            blog.votedBy.push(userId);
+            const newBlog = await blog.save();
+
+            res.status(200).json({message: "Voted successfully", blog: newBlog })
+            } catch(e){
+                console.log("error:"+ JSON.stringify(e));
+                res.status(500).json({ message: "Internal Server Error"})
+            }
     });
 
 app.listen(PORT, (req, res) =>{

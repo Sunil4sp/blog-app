@@ -26,7 +26,7 @@ module.exports.fetchBlogs = async (req, res) => {
     
         if (!mongoose.Types.ObjectId.isValid(userId)) {
             return res.status(400).json({ message: "Invalid user ID", status: "error" });
-          }
+        }
 
         // Check if the user exists (optional but good practice to verify)
         const userExists = await User.findById(userId);
@@ -209,29 +209,38 @@ module.exports.addComment = async (req, res) =>{
     }
 };
 
-module.exports.addVote = async (req, res) =>{
+/* module.exports.addVote = async (req, res) =>{
     try{
     const blogId = req.params.id;
     const userId = req.user.id;
     const { voteType } = req.body;
 
-    const blog = Blog.findById(blogId);
+    const blog = await Blog.findById(blogId);
 
     if(!blog){
         return res.status(404)
-        .json({message: "Comment not found", status:"error"});
+        .json({message: "Blog not found", status:"error"});
     }
 
     //check if user has already voted
-    if(blog.votedBy.includes(userId)){
+    if(!blog.votedBy.includes(userId)){
         return res.status(400)
-        .json({message: "User has voted", status:"error"});
+        .json({message: "User has already voted", status:"error"});
     }
 
-    blog.upvote = voteType === 'upvote'? blog.upvote+1 :
+    /* blog.upvote = voteType === 'upvote'? blog.upvote+1 :
     blog.upvote;
     blog.downvote = voteType === 'downvote'? blog.downvote+1 :
-    blog.downvote;
+    blog.downvote; */
+
+    /*if (voteType === 'upvote') {
+        blog.upvote += 1;
+        } else if (voteType === 'downvote') {
+            blog.downvote += 1;
+            if (blog.upvote > 0) blog.upvote -= 1; // reduce one like if downvoted
+        } else {
+            return res.status(400).json({ message: "Invalid vote type" });
+        }
 
     blog.votedBy.push(userId);
 
@@ -242,4 +251,4 @@ module.exports.addVote = async (req, res) =>{
         console.log("error:"+ JSON.stringify(e));
         res.status(500).json({ message: "Internal Server Error"})
     }
-};
+}; */

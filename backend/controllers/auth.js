@@ -5,9 +5,9 @@ const secretKey = "MilestoneProject";
 const bcrypt = require("bcrypt");
 
 const createUser = async (req, res) =>{
-    const { username, uname, password, email } = req.body;
+    const { username, password, email } = req.body;
     try{
-        const userInput = new User({username, uname, password, email});
+        const userInput = new User({username, password, email});
         const user = await userInput.save();
         const token = jwt.sign(
             { username: user.username, email: user.email, userId: user._id },
@@ -24,19 +24,19 @@ const createUser = async (req, res) =>{
 };
 
 const loginUser = async ( req, res) => {
-    const { username, email, password } = req.body;
+    const { email, password } = req.body;
     try{
-        if(!username || !email || !password){
+        if(!email || !password){
             return res
             .status(401)
-            .json({ message: "username/email/password cannot be empty", 
+            .json({ message: "email/password cannot be empty", 
             status: "error"});
         }
-        const user = await User.findOne({ username });
+        const user = await User.findOne({ email });
         if(!user){
             return res
             .status(401)
-            .json({ message: "username invalid", 
+            .json({ message: "email invalid", 
             status: "error"});
         }
             //check if password matches
@@ -44,11 +44,11 @@ const loginUser = async ( req, res) => {
             if(!isPasswordMatch)
                 return res
                 .status(401)
-                .json({ message: "username/password invalid", 
+                .json({ message: "email/password invalid", 
                 status: "error"});
             
             const token = jwt.sign(
-                { username: user.username,  email: user.email, userId: user._id },
+                { /* username: user.username, */  email: user.email, userId: user._id },
                 secretKey
                 );
                 return res

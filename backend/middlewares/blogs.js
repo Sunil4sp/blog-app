@@ -24,6 +24,16 @@ const fetchBlogs = async (req, res, next) =>{
         return res.status(500).json({ message: "Error retrieving blogs"});
     }
 };
+const fetchAllBlogs = async (req, res, next) =>{
+    try {
+        const blogs = await Blog.find();
+        req.blogs = blogs;
+        next();
+    } catch(err){
+        console.error("Error retrieving blogs: ", err);
+        return res.status(500).json({ message: "Error retrieving blogs"});
+    }
+};
 
 const post = async (req, res, next) =>{
     try{
@@ -55,4 +65,4 @@ const edit = async (req, res, next) =>{
 }
 
 
-module.exports = fetchBlogs, post, edit;
+module.exports = fetchAllBlogs, fetchBlogs, post, edit;
