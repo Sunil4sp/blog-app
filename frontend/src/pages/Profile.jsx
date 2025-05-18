@@ -133,7 +133,7 @@ const Profile = () => {
                     Create blog
                   </button>
                 </Link>
-                <Link to="/fetchblogs/:id">
+                <Link to={`/fetchblogs/${user._id}`}>
                   <button className="p-4 rounded-lg w-36 hover:bg-sky-500 hover:w-40 hover:text-white hover:font-bold">
                     My blog
                   </button>

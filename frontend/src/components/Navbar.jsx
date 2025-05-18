@@ -1,12 +1,14 @@
-import React, { useState, useContext } from 'react';
-import { Link, /* useLocation, */ useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link,useNavigate  /* useLocation, */ } from 'react-router-dom';
 import {BsSearch} from 'react-icons/bs';
 import {FaBars} from 'react-icons/fa';
 import Menu from './Menu';
-import { UserContext } from '../context/UserContext';
+import axios from 'axios';
+/* import { UserContext } from '../context/UserContext'; */
 
 const Navbar = () => {
 const [prompt, setPrompt] = useState("");
+const [user, setUser] = useState(null);
 const [menu, setMenu] = useState(false);
 const navigate = useNavigate();
 /* const path = useLocation().pathname; */
@@ -14,7 +16,34 @@ const navigate = useNavigate();
 const showMenu = () =>{
   setMenu(!menu)
 }
- const { user} = useContext(UserContext)
+
+useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      // Make a request to get user details
+      axios
+        .get("http://localhost:8000/profile", {
+          // This should be the endpoint to get the user's profile
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          setUser(response.data.user); // Set the user data if successful
+        })
+        .catch((error) => {
+          console.error("Error fetching user data", error);
+          // If error occurs (e.g., token expired), remove the token and set user to null
+          localStorage.removeItem("token");
+          setUser(null);
+        });
+    } else {
+      setUser(null); // If there's no token, set user to null
+    }
+  }, []);
+
+ /* const { user} = useContext(UserContext) */
 
   return (
     <>

@@ -32,12 +32,18 @@ const Home = () => {
 
   return (
     <>
-      {user ? (
+    {
+      user && <MyBlogs />
+    }
+    {/* { !user &&
+      <Login />
+    } */}
+      {/* {user ? (
           <MyBlogs /> )
       :
       ( 
         <Login />)
-      }
+      } */}
     </>
   )
 }

@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
-import ThumbDownOffAltOutlinedIcon from '@mui/icons-material/ThumbDownOffAltOutlined';
-import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 
 const BlogDetail = () => {
     const { id } = useParams(); // Get the blog ID from the URL
@@ -82,11 +79,7 @@ const BlogDetail = () => {
             >
             Delete a blog
             </button>
-            <div className='px-4 py-4'>
-                <ThumbUpAltOutlinedIcon />
-                <ThumbDownOffAltOutlinedIcon />
-                <ModeCommentOutlinedIcon />
-            </div>
+            
         </div>
         </div>
     );
