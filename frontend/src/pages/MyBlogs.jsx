@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {jwtDecode} from "jwt-decode";
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import ThumbDownOffAltOutlinedIcon from '@mui/icons-material/ThumbDownOffAltOutlined';
@@ -13,6 +13,7 @@ const MyBlogs = () => {
   const [likeCounts, setLikeCounts] = useState({});
   const [dislikedBlogs, setDislikedBlogs] = useState([]);
   const [dislikeCounts, setDislikeCounts] = useState({});
+  const navigate = useNavigate();
 
   const getUserIdFromToken = () => {
     const token = localStorage.getItem("token");
@@ -31,38 +32,7 @@ const MyBlogs = () => {
     }
   };
 
-  const retrievePost = async () =>{
-    /* const userId = getUserIdFromToken(); */
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setError('You must be logged in to retrieve a post');
-      return;
-    }
-    /* console.log("Fetching All blogs: ", token); */
-    try {
-      const response = await axios.get('http://localhost:8000/fetchAllBlogs', 
-        /* { title, description },  */
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-      // Handle success
-      console.log("Post retrieved successfully:", response.data);
-      //navigate(`/myblogs/${response.data.userId}`);  // Redirect to user's blogs
-      if (response.data && Array.isArray(response.data.blogs)) {
-        setBlogs(response.data.blogs);
-      } else {
-        setBlogs([]);
-      }
-
-    } catch (error) {
-      console.error('Error retrieving post:', error);
-      setError(error.response?.data?.message || 'Error creating post');
-    }
-  }
-  /* const retrievePost = async () => {
+  const retrievePost = async () => {
     
       const userId = getUserIdFromToken();  // Get the logged-in user ID from the token
       if (!userId){ 
@@ -76,14 +46,15 @@ const MyBlogs = () => {
         `http://localhost:8000/fetchBlogs/${userId}`,
         {
           headers: {
-            Authorization: `Bearer {localStorage.getItem("userId")}`/* ${userId}`,
+            Authorization: `Bearer {localStorage.getItem("userId")}` /* ${userId}` */,
           },
         }
       );
 
       // Handle success
       console.log("API Response:", response.data);
-      const initialCounts = {};
+      navigate(`/fetchBlogs/${userId}`);  // Redirect to user's blogs
+      /* const initialCounts = {};
       response.data.blogs.forEach(blog => {
         initialCounts[blog._id] = blog.likes || 0;
       });
@@ -92,7 +63,7 @@ const MyBlogs = () => {
       setBlogs(response.data.blogs.map(blog => ({
         ...blog,
         likes: blog.likes || 0  // Default to 0 if not provided
-      })));
+      }))); */
       if (response.data && Array.isArray(response.data.blogs)) {
         setBlogs(response.data.blogs);
       } else {
@@ -102,28 +73,8 @@ const MyBlogs = () => {
       console.error("Error retrieving post:", error);
       setError(error.response?.data?.message || "Error retrieving blogs");
     }
-  };*/
-
-  const voteBlog = async (blogId, voteType) => {
-    const token = localStorage.getItem("token");
-    
-    try {
-      const response = await axios.post(
-        `http://localhost:8000/addVote/${blogId}`,
-        { voteType },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      const updatedBlog = response.data.blog;
-      setLikeCounts(prev => ({ ...prev, [blogId]: updatedBlog.upvote }));
-      setDislikeCounts(prev => ({ ...prev, [blogId]: updatedBlog.downvote }));
-    } catch (error) {
-      console.error("Voting error:", error.response?.data || error.message);
-    }
   };
+
  
   useEffect(() => {
     const userId = getUserIdFromToken();
@@ -137,8 +88,8 @@ const MyBlogs = () => {
       className="md:container-md bg-slate-50 md:mx-auto px-4 bg-slate-50 columns-1 md: h-auto w-3/4 p-4 mt-6 
       grid border-slate-100 bg-slate-50 dark:bg-slate-800 dark:border-slate-500 border-b rounded-t-xl"
     >
-      <div className="text-center tracking-widest pb-16">My Blogs Space</div>
-      <label className="tracking-wider">Blog:</label>
+      <div className="text-center tracking-widest pb-4">My Blogs Space</div>
+      <label className="tracking-wider pb-4">Blog:</label>
       <div className="grid grid-flow-row auto-rows-auto border-2 border-solid">
       {blogs.length > 0 ? (
         <div className="grid grid-flow-row auto-rows-auto border-2 border-solid p-2">
@@ -149,35 +100,7 @@ const MyBlogs = () => {
             <Link to={`/post/${blog._id}`}>
               <h3 className="px-8 hover:text-white hover:bg-gray-500 hover:tracking-widest">{blog.title}..............</h3>
             </Link>
-            <div className="grid grid-flow-col">
-              <div className='px-1 justify-items-center'>
-
-                <ThumbUpAltOutlinedIcon alt='Like' onClick={() =>  voteBlog(blog._id, "upvote")}
-                  style={{
-                    color: likedBlogs.includes(blog._id) ? "blue" : "gray",
-                    cursor: "pointer",
-                  }}
-                /> 
-                  <span className="ml-1 text-sm text-gray-700 dark:text-gray-300">
-                      {likeCounts[blog._id] || 0}
-                  </span>
-              </div>
-              <div className='px-1 justify-items-center'>
-
-                <ThumbDownOffAltOutlinedIcon alt='Dislike' onClick={() => 
-                  voteBlog(blog._id, "downvote")}
-                  style={{
-                  color: dislikedBlogs.includes(blog._id) ? "blue" : "gray",
-                  cursor: "pointer",
-                }} />
-                 <span className="ml-1 text-sm text-gray-700 dark:text-gray-300">
-                    {dislikeCounts[blog._id] || 0}
-                </span>
-              </div>
-              <div className='px-1 justify-items-center'>
-                        <ModeCommentOutlinedIcon alt='Comment' />
-              </div>
-            </div>
+            
           </div>
         ))}
          

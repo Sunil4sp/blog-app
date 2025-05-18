@@ -24,7 +24,8 @@ const Login = () => {
       console.log("Login Successful:", response.data);
       setIsLoggedIn(true);
       alert("User Logged Successfully")
-      navigate(`/fetchblogs/:id`);
+      navigate('/fetchAllBlogs');
+      /* navigate(`/fetchblogs/:id`); */
     } catch(err){
       console.error("Error logging in:", err);
       setError(err.response?.data?.message || "Login failed");

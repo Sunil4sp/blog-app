@@ -14,6 +14,7 @@ const CreatePost = lazy(() => import('./pages/CreatePost'));
 const ProfilePictureUpload = lazy(() => import('./pages/ProfilePictureUpload'));
 const EditPost = lazy(() => import('./pages/EditPost'));
 const MyBlogs = lazy(() => import('./pages/MyBlogs'));
+const AllBlogs = lazy(() => import('./pages/AllBlogs'));
 const Profile = lazy(() => import('./pages/Profile'));
 const BlogDetail = lazy(() => import('./pages/BlogDetail'));
 
@@ -23,12 +24,13 @@ const App = () => {
       <Header /> 
       <Suspense fallback= {<Loader />}>
       <Routes>
-         <Route exact path='/home' element= { <Home /> } />
+        <Route exact path='/home' element= { <Home /> } />
         <Route exact path='/login' element= { <Login /> } /> 
         <Route exact path='/register' element= { <Register /> } />
         <Route exact path='/create' element= { <CreatePost /> } />
         <Route exact path='/uploadProfilePicture/:id' element= { <ProfilePictureUpload /> } />
         <Route exact path='/edit/:id' element= { <EditPost /> } />
+        <Route exact path='/fetchAllBlogs' element= { <AllBlogs /> } />
         <Route exact path='/fetchblogs/:id' element= { <MyBlogs /> } />
         <Route exact path='/profile/:id' element= { <Profile /> } />
         <Route exact path='/post/:id' element={ <BlogDetail /> } />

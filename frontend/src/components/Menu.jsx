@@ -64,14 +64,18 @@ const Menu = ({setMenu}) => {
       {user && (
         <>
         <h3 className="text-black text-sm hover:text-gray-500 cursor-pointer">
-          <Link to={`/profile/${user._id}`} onClick={() => setMenu(false)}>Profile</Link>
+          <Link to="/create" onClick={() => setMenu(false)}>Create blog</Link>
         </h3>
         <h3 className="text-black text-sm hover:text-gray-500 cursor-pointer">
-          <Link to="/create" onClick={() => setMenu(false)}>Create blog</Link>
+          <Link to={`/profile/${user._id}`} onClick={() => setMenu(false)}>Profile</Link>
         </h3>
         <h3 className="text-black text-sm hover:text-gray-500 cursor-pointer">
           <Link to={`/fetchblogs/${user._id}`} onClick={() => setMenu(false)}>My Blogs</Link>
         </h3>
+        <h3 className="text-black text-sm hover:text-gray-500 cursor-pointer">
+          <Link to={`/fetchAllBlogs`} onClick={() => setMenu(false)}>Blogs Collection</Link>
+        </h3>
+
       {/* Logout button is always visible if the user is logged in */}
         <h3
           className="text-black text-sm hover:text-gray-500 cursor-pointer"

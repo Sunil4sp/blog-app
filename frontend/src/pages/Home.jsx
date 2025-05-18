@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Login from './Login';
-import MyBlogs from './MyBlogs';
+/* import MyBlogs from './MyBlogs'; */
+import AllBlogs from './AllBlogs';
 
 const Home = () => {
   const [user, setUser] = useState(null);
@@ -32,18 +33,12 @@ const Home = () => {
 
   return (
     <>
-    {
-      user && <MyBlogs />
-    }
-    {/* { !user &&
-      <Login />
-    } */}
-      {/* {user ? (
-          <MyBlogs /> )
+      {user ? (
+          <AllBlogs /> )
       :
       ( 
         <Login />)
-      } */}
+      }
     </>
   )
 }

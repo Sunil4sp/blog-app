@@ -68,7 +68,7 @@ useEffect(() => {
             {
               user ? (
               <h3> 
-                <Link to={`/fetchblogs/${user._id}`}>My blog</Link>
+                <Link to={`/fetchblogs/${user._id}`}>My blogs</Link>
               </h3>
               ) : (
               <h3>
