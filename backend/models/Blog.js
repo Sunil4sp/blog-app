@@ -30,10 +30,16 @@ const blogSchema = new mongoose.Schema(
         type: Number,
         default: 0
     },
-    votedBy: {
+    votedBy: [{
+        userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: "User"
     },
+    type: {
+        type: String, // 'upvote' or 'downvote'
+        enum: ['upvote', 'downvote']
+    }
+    }],
     comments: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Comment",

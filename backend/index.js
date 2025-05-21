@@ -191,7 +191,7 @@ app.put('/editProfile', /* fetchUser, */ async (req, res) => {
     }
 });
 
-  app.post('/posts', /* fetchUser, */ async (req, res) => {          //post new blog
+  app.post('/posts', async (req, res) => {          //post new blog
     const { title, description, tag } = req.body;
     const token = req.headers['authorization'].split(' ')[1]; // Extract token
     if (!token) return res.status(401).json({ message: 'No token provided' });
@@ -250,14 +250,14 @@ app.get("/fetchBlogs/:id", async (req, res) => {
         }
     });
 
-app.get('/post/:id', /* fetchUser, */ async (req, res) => {
+app.get('/post/:id', async (req, res) => {
     try {
         const post = await Post.findById(req.params.id);
 
             if (!post) {
                 return res.status(404).json({ message: 'Post not found' });
             }
-            res.status(200).json({ message: 'Post retrieved successfully', post }); /* } */
+            res.status(200).json({ message: 'Post retrieved successfully', post });
         } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error' });
@@ -290,11 +290,11 @@ app.put('/updateBlog/:id', async (req, res) => {
         }
     });
 
-app.delete('/deleteBlog/:id', /* fetchUser, */ async (req, res) => {
+app.delete('/deleteBlog/:id',/*  fetchUser, */ async (req, res) => {
         try{
             const blogId = req.params.id;
             
-            const userId = req.user.id;
+            const userId = await User.findById(_id);
         
             const blog = await Post.findById(blogId);
             console.log(blogId, blog);
@@ -319,7 +319,7 @@ app.delete('/deleteBlog/:id', /* fetchUser, */ async (req, res) => {
             } 
     });
 
-app.post('/addVote/:id', /* fetchUser, */ async (req, res) => {  
+app.post('/addVote/:id', async (req, res) => {  
         try{
             const blogId = req.params.id;
             const token = req.headers.authorization?.split(" ")[1];
@@ -329,41 +329,91 @@ app.post('/addVote/:id', /* fetchUser, */ async (req, res) => {
             const userId = decoded.userId;
 
             const { voteType } = req.body;
+
+            /* if (!['upvote', 'downvote'].includes(voteType)) {
+            return res.status(400).json({ message: "Invalid vote type" });
+            } */
         
             const blog = await Post.findById(blogId);
-            console.log("Blog: ",blog);
         
             if(!blog){
                 return res.status(404).json({message: "Blog not found", status:"error"});
             }
-        
-            //check if user has already voted
-            if(blog.votedBy.includes(userId)){
-                return res.status(400)
-                .json({message: "User has already voted", status:"error"});
-            }
-            /* blog.upvote = voteType === 'upvote'? blog.upvote+1 :
-            blog.upvote;
-            blog.downvote = voteType === 'downvote'? blog.downvote+1 :
-            blog.downvote; */
-        
-            if (voteType === 'upvote') {
-                blog.upvote += 1;
-                } else if (voteType === 'downvote') {
-                    blog.downvote += 1;
-                    if (blog.upvote > 0) blog.upvote -= 1; // reduce one like if downvoted
-                } else {
-                    return res.status(400).json({ message: "Invalid vote type" });
-                }
-        
-            blog.votedBy.push(userId);
-            const newBlog = await blog.save();
 
-            res.status(200).json({message: "Voted successfully", blog: newBlog })
-            } catch(e){
-                console.log("error:"+ JSON.stringify(e));
-                res.status(500).json({ message: "Internal Server Error"})
+            const existingVoteIndex = blog.votedBy.findIndex(v => v.userId.toString() === userId);
+            let previousVoteType = null;
+
+            if (existingVoteIndex > -1) {
+            previousVoteType = blog.votedBy[existingVoteIndex].type;
+
+            // Remove the vote if same type clicked again (toggle)
+            if (previousVoteType === voteType) {
+                blog.votedBy.splice(existingVoteIndex, 1);
+                if (voteType === 'upvote') blog.upvote--;
+                if (voteType === 'downvote') blog.downvote--;
+            } else {
+                // Change vote type
+                blog.votedBy[existingVoteIndex].type = voteType;
+                if (voteType === 'upvote') {
+                blog.upvote++;
+                blog.downvote--;
+                } else {
+                blog.downvote++;
+                blog.upvote--;
+                }
             }
+            } else {
+            // New vote
+            blog.votedBy.push({ userId, type: voteType });
+            if (voteType === 'upvote') blog.upvote++;
+            if (voteType === 'downvote') blog.downvote++;
+            }
+
+            const updatedBlog = await blog.save();
+            res.status(200).json({ message: "Vote updated", blog: updatedBlog });
+        } catch (e) {
+            console.error("Vote error:", e);
+            res.status(500).json({ message: "Internal Server Error" });
+        }
+            /* if (!Array.isArray(blog.votedBy)) blog.votedBy = [];
+        
+            const existingVoteIndex = blog.votedBy.findIndex(v => v.userId.toString() === userId);
+        let updated = false;
+
+        if (existingVoteIndex !== -1) {
+            const existingVote = blog.votedBy[existingVoteIndex];
+
+            if (existingVote.type === voteType) {
+                // Remove vote
+                blog.votedBy.splice(existingVoteIndex, 1);
+                if (voteType === 'upvote' && blog.upvote > 0) blog.upvote -= 1;
+                if (voteType === 'downvote' && blog.downvote > 0) blog.downvote -= 1;
+            } else {
+                // Change vote
+                blog.votedBy[existingVoteIndex].type = voteType;
+                if (voteType === 'upvote') {
+                    if (blog.downvote > 0) blog.downvote -= 1;
+                    blog.upvote += 1;
+                } else {
+                    if (blog.upvote > 0) blog.upvote -= 1;
+                    blog.downvote += 1;
+                }
+            }
+        } else {
+            // New vote
+            blog.votedBy.push({ userId, type: voteType });
+            if (voteType === 'upvote') blog.upvote += 1;
+            else blog.downvote += 1;
+        }
+
+        const updatedBlog = await blog.save();
+
+            res.status(200).json({message: "Vote processed", blog: updatedBlog })
+
+            } catch(err){
+                console.log("Vote error:", err);
+                res.status(500).json({ message: "Internal Server Error"})
+            } */
     });
 
 app.listen(PORT, (req, res) =>{
