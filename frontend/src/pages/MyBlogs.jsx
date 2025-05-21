@@ -2,17 +2,17 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import {jwtDecode} from "jwt-decode";
-import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
+/* import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import ThumbDownOffAltOutlinedIcon from '@mui/icons-material/ThumbDownOffAltOutlined';
-import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
+import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined'; */
 
 const MyBlogs = () => {
   const [blogs, setBlogs] = useState([]);
   const [error, setError] = useState("");
-  const [likedBlogs, setLikedBlogs] = useState([]);
+/*   const [likedBlogs, setLikedBlogs] = useState([]);
   const [likeCounts, setLikeCounts] = useState({});
   const [dislikedBlogs, setDislikedBlogs] = useState([]);
-  const [dislikeCounts, setDislikeCounts] = useState({});
+  const [dislikeCounts, setDislikeCounts] = useState({}); */
   const navigate = useNavigate();
 
   const getUserIdFromToken = () => {

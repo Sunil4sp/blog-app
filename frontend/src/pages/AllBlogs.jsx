@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-/* import {jwtDecode} from "jwt-decode"; */
+import {jwtDecode} from "jwt-decode";
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import ThumbDownOffAltOutlinedIcon from '@mui/icons-material/ThumbDownOffAltOutlined';
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
@@ -14,6 +14,23 @@ const AllBlogs = () => {
     const [dislikedBlogs, setDislikedBlogs] = useState([]);
     const [dislikeCounts, setDislikeCounts] = useState({});
     const navigate = useNavigate();
+
+        const getUserIdFromToken = () => {
+            const token = localStorage.getItem("token");
+            if (!token) {
+            setError("You must be logged in to read a post");
+            return null;
+            }
+            try {
+            const decodedToken = jwtDecode(token);
+            /* console.log("Decoded token:", decodedToken); */
+            return decodedToken?.id || decodedToken?._id || decodedToken?.userId; // Adjust if your ID is stored differently
+            } catch (error) {
+            console.error("Invalid token:", error);
+            setError("Invalid token");
+            return null;
+            }
+        };
 
     const retrievePost = async () =>{
         /* const userId = getUserIdFromToken(); */
@@ -37,6 +54,16 @@ const AllBlogs = () => {
         navigate(`/fetchAllBlogs`);  // Redirect to all user's blogs    
         if (response.data && Array.isArray(response.data.blogs)) {
             setBlogs(response.data.blogs);
+            const likes = {};
+            const dislikes = {};
+
+            response.data.blogs.forEach(blog => {
+                likes[blog._id] = blog.upvote;
+                dislikes[blog._id] = blog.downvote;
+            });
+
+            setLikeCounts(likes);
+            setDislikeCounts(dislikes);
         } else {
             setBlogs([]);
         }
@@ -49,7 +76,7 @@ const AllBlogs = () => {
 
     const voteBlog = async (blogId, voteType) => {
         const token = localStorage.getItem("token");
-        
+        const decodedUserId = getUserIdFromToken();
         try {
         const response = await axios.post(
             `http://localhost:8000/addVote/${blogId}`,
@@ -61,8 +88,25 @@ const AllBlogs = () => {
             }
         );
         const updatedBlog = response.data.blog;
+        console.log(response.data.blog);
+
         setLikeCounts(prev => ({ ...prev, [blogId]: updatedBlog.upvote }));
         setDislikeCounts(prev => ({ ...prev, [blogId]: updatedBlog.downvote }));
+
+        // Update liked/disliked states
+        const voted = updatedBlog.votedBy.find(v => v.userId?.toString() === decodedUserId); // You might store the decoded user id
+
+        if (!voted) {
+            setLikedBlogs(prev => prev.filter(id => id !== blogId));
+            setDislikedBlogs(prev => prev.filter(id => id !== blogId));
+        } else if (voted.type === "upvote") {
+            setLikedBlogs(prev => [...new Set([...prev, blogId])]);
+            setDislikedBlogs(prev => prev.filter(id => id !== blogId));
+        } else if (voted.type === "downvote") {
+            setDislikedBlogs(prev => [...new Set([...prev, blogId])]);
+            setLikedBlogs(prev => prev.filter(id => id !== blogId));
+        }
+
         } catch (error) {
         console.error("Voting error:", error.response?.data || error.message);
         }
@@ -79,17 +123,19 @@ const AllBlogs = () => {
         >
         <div className="text-center tracking-widest pb-4">Blogs Collection</div>
         <label className="tracking-wider pb-4">Blog:</label>
-        <div className="grid grid-flow-row auto-rows-auto border-2 border-solid">
+        <div className="grid grid-flow-row auto-rows-auto /* border-2 border-solid */">
         {blogs.length > 0 ? (
-            <div className="grid grid-flow-row auto-rows-auto border-2 border-solid p-2">
+            <div className="grid grid-flow-row auto-rows-auto /* border-2  border-solid*/ p-2">
             {blogs.map((blog) => (
             <div key={blog._id}
-                className="grid grid-flow-col border-2 tracking-wider w-full"
+                className="grid grid-flow-col /* tracking-wider */"
             > 
+            <div className='px-1 justify-items-center w-full border-2 border-solid'>
                 <Link to={`/post/${blog._id}`}>
-                <h3 className="px-8 hover:text-white hover:bg-gray-500 hover:tracking-widest">{blog.title}..............</h3>
+                <h3 className="px-4 hover:text-white hover:bg-gray-500">{blog.title}..............</h3>
                 </Link>
-                <div className="grid grid-flow-col">
+            </div>
+                <div className="grid grid-flow-col justify-items-center content-around gap-4 w-full border-2">
                 <div className='px-1 justify-items-center'>
 
                     <ThumbUpAltOutlinedIcon alt='Like' onClick={() =>  voteBlog(blog._id, "upvote")}

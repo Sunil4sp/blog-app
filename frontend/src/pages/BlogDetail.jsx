@@ -41,7 +41,7 @@ const BlogDetail = () => {
     // After deletion, re-fetch posts
         /* setUsers((prevUsers) => prevUsers.filter((user) => user._id !== id)); */
         alert("Blog deleted successfully");
-        navigate("/");
+        navigate("/fetchAllBlogs");
         } catch (error) {
         console.error("Error deleting blog:", error);
         setError(error.response?.data?.message || "Error deleting blog");
