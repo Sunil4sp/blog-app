@@ -37,8 +37,14 @@ const EditPost = () => {
           Authorization: `Bearer ${token}`,
         },
       });
+
+        if (title === blog.title && description === blog.description) {
+        alert("Nothing to save - you didn't change anything.");
+        navigate(`/fetchBlogs/${id}`);
+        return;
+}
       alert("Blog updated successfully!");
-      navigate(`/fetchblogs/${id}`);
+      navigate(`/post/${id}`);
       // After successful edit, maybe redirect or update the state
     } catch (error) {
       console.error("Error updating blog:", error);

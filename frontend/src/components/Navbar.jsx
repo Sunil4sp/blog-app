@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link,useNavigate  /* useLocation, */ } from 'react-router-dom';
+import { /* Form, */ Link, useNavigate } from 'react-router-dom';
 import {BsSearch} from 'react-icons/bs';
 import {FaBars} from 'react-icons/fa';
 import Menu from './Menu';
@@ -58,16 +58,45 @@ useEffect(() => {
         </div>
         
         { /* path === '/' && */ <div onChange={(e) => setPrompt(e.target.value)} className='flex justify-center items-center space-x-0'>
-          <input className='outline outline-1 rounded-l-md px-3 text-black bg-white' placeholder='Search a post' type='text'/>
-          <p onClick={() => navigate(prompt ? "search?q=" + prompt : navigate(`/fetchblogs/${user._id}`)) } className='cursor-pointer outline outline-1 py-1 px-1 bg-white text-black rounded-r-md'>
+          {/* <Form onSubmit={navigate(`/search?q=${encodeURIComponent(prompt)}`)}>
+          <input className='outline outline-1 rounded-l-md px-3 text-black bg-white' placeholder='Search a post' type='text'/> */}
+          {/* <p onClick={() => navigate(prompt ? "search?q=" + prompt : navigate(`/fetchblogs/${user._id}`)) } className='cursor-pointer outline outline-1 py-1 px-1 bg-white text-black rounded-r-md'> */}
+          {/* <p onClick={() => {
+              if (prompt.trim()) {
+                navigate(`/search?q=${encodeURIComponent(prompt)}`);
+              }
+            }}
+            className='cursor-pointer outline outline-1 py-1 px-1 bg-white text-black rounded-r-md'
+          >  
             <BsSearch />
-          </p>
-          </div>}
+          </p> </Form>*/}
+          <form onSubmit={(e) => {
+                e.preventDefault();
+                if (prompt.trim()) {
+                  navigate(`/search?q=${encodeURIComponent(prompt)}`);
+                }
+              }} className='flex'>
+              <input
+                className='outline outline-1 rounded-l-md px-3 text-black bg-white'
+                placeholder='Search a post'
+                type='text'
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+              />
+              <button
+                type="submit"
+                className='cursor-pointer outline outline-1 py-1 px-1 bg-white text-black rounded-r-md'
+              >
+                <BsSearch />
+              </button>
+            </form>
 
-          <div className='hidden md:flex items-center justify-center space-x-2 md:space-x-4 text-black' >
+          </div>} 
+
+          <div className='hidden md:flex items-center justify-center space-x-2 md:space-x-4 text-black'>
             {
               user ? (
-              <h3> 
+              <h3 className='hover:font-bold'> 
                 <Link to={`/fetchblogs/${user._id}`}>My blogs</Link>
               </h3>
               ) : (
@@ -77,10 +106,16 @@ useEffect(() => {
             }
             
             { user ? (
-              <div onClick={showMenu}>
-              <p className='cursor-pointer relative'></p>
-                <FaBars />
-                {menu && <Menu setMenu= {setMenu} />}
+              <div className="relative">{/* onClick={showMenu}> */}
+              {/* <p className='cursor-pointer relative'></p> */}
+              <button onClick={showMenu} className="flex items-center space-x-2 cursor-pointer">
+                <FaBars className="text-xl"/>
+                </button>
+                {menu && (
+                  <div className="absolute right-0 top-full z-50 mt-2">
+                    <Menu setMenu= {setMenu} />
+                    </div>
+                    )}
             </div>
             ) : (
             <h3> <Link to='/register'>Register</Link></h3>

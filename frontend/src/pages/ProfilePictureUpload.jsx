@@ -57,7 +57,9 @@ const ProfilePictureUpload = () => {
             setPreview(null);
             setLoading(false);
 
-            navigate(`/profile/${id}`);
+            /* navigate(`/profile/${id}`); */
+            navigate(`/profile/${id}`, { state: { forceReload: true } });
+
         } catch (err) {
             console.error("Error uploading profile picture:", err);
             setError("Error uploading profile picture");

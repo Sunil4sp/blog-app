@@ -128,14 +128,14 @@ const AllBlogs = () => {
             <div className="grid grid-flow-row auto-rows-auto /* border-2  border-solid*/ p-2">
             {blogs.map((blog) => (
             <div key={blog._id}
-                className="grid grid-flow-col /* tracking-wider */"
+                className="grid grid-cols-2 /*grid-flow-col  tracking-wider */"
             > 
-            <div className='px-1 justify-items-center w-full border-2 border-solid'>
+            <div className='px-1 justify-items-center border-2 border-solid'>
                 <Link to={`/post/${blog._id}`}>
                 <h3 className="px-4 hover:text-white hover:bg-gray-500">{blog.title}..............</h3>
                 </Link>
             </div>
-                <div className="grid grid-flow-col justify-items-center content-around gap-4 w-full border-2">
+                <div className="grid grid-flow-col justify-items-center content-around gap-4  border-2">
                 <div className='px-1 justify-items-center'>
 
                     <ThumbUpAltOutlinedIcon alt='Like' onClick={() =>  voteBlog(blog._id, "upvote")}

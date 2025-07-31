@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import axios from 'axios';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const CreatePost = () => {
   const { id } = useParams();
@@ -31,7 +32,7 @@ const CreatePost = () => {
 
       // Handle success
       console.log("Post created successfully:", response.data);
-      navigate(`/fetchblogs/${response.data.userId}`);  // Redirect to user's blogs
+      navigate(`/fetchBlogs/${response.data.userId}`);  // Redirect to user's blogs
 
     } catch (error) {
       console.error('Error creating post:', error);
@@ -43,6 +44,13 @@ const CreatePost = () => {
   return (
     <>
       <div className="md:container-sm bg-slate-50 md:mx-auto bg-slate-50 columns-1 md:box-content h-auto w-3/4 mt-6 grid border-slate-100 bg-slate-50 dark:bg-slate-800 dark:border-slate-500 border-b rounded-t-xl">
+        <Link to='/fetchAllBlogs'>
+            <button
+                className="bg-sky-500 px-4 py-2 w-fit rounded-lg shadow-md hover:bg-sky-600 hover:font-bold hover:text-white"
+            >
+                <ArrowBackIcon /> Back
+            </button>
+        </Link>
         <div className="md:container md:mx-auto px-4 mb-6 gap-8 items-center justify-between">
           <h3 className="text-center underline underline-offset-4 pb-12 font-semibold">CREATE A BLOG</h3>
           <label className='pr-20 text-center font-medium'>Blog Title :</label>

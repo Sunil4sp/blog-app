@@ -17,6 +17,7 @@ const MyBlogs = lazy(() => import('./pages/MyBlogs'));
 const AllBlogs = lazy(() => import('./pages/AllBlogs'));
 const Profile = lazy(() => import('./pages/Profile'));
 const BlogDetail = lazy(() => import('./pages/BlogDetail'));
+const SearchResults = lazy(() => import('./pages/SearchResults'));
 
 const App = () => {
   return (
@@ -34,6 +35,7 @@ const App = () => {
         <Route exact path='/fetchblogs/:id' element= { <MyBlogs /> } />
         <Route exact path='/profile/:id' element= { <Profile /> } />
         <Route exact path='/post/:id' element={ <BlogDetail /> } />
+        <Route exact path='/search' element={ <SearchResults />} />
         <Route exact path='/' element= { <Home /> } />
       </Routes>
       </Suspense>

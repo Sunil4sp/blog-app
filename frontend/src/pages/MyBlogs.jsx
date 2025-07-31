@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import {jwtDecode} from "jwt-decode";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 /* import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import ThumbDownOffAltOutlinedIcon from '@mui/icons-material/ThumbDownOffAltOutlined';
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined'; */
@@ -54,16 +55,7 @@ const MyBlogs = () => {
       // Handle success
       console.log("API Response:", response.data);
       navigate(`/fetchBlogs/${userId}`);  // Redirect to user's blogs
-      /* const initialCounts = {};
-      response.data.blogs.forEach(blog => {
-        initialCounts[blog._id] = blog.likes || 0;
-      });
-      setLikeCounts(initialCounts);
-      setDislikeCounts(initialCounts);
-      setBlogs(response.data.blogs.map(blog => ({
-        ...blog,
-        likes: blog.likes || 0  // Default to 0 if not provided
-      }))); */
+      
       if (response.data && Array.isArray(response.data.blogs)) {
         setBlogs(response.data.blogs);
       } else {
@@ -88,6 +80,13 @@ const MyBlogs = () => {
       className="md:container-md bg-slate-50 md:mx-auto px-4 bg-slate-50 columns-1 md: h-auto w-3/4 p-4 mt-6 
       grid border-slate-100 bg-slate-50 dark:bg-slate-800 dark:border-slate-500 border-b rounded-t-xl"
     >
+      <Link to='/fetchAllBlogs'>
+            <button
+                className="bg-sky-500 px-4 py-2 w-fit rounded-lg shadow-md hover:bg-sky-600 hover:font-bold hover:text-white"
+            >
+                <ArrowBackIcon /> Back
+            </button>
+        </Link>
       <div className="text-center tracking-widest pb-4">My Blogs Space</div>
       <label className="tracking-wider pb-4">Blog:</label>
       <div className="grid grid-flow-row auto-rows-auto border-2 border-solid">

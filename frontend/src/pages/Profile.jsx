@@ -1,19 +1,21 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import Loader from "../components/Loader";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState("");
-  const [imgurl, setImgurl] = useState("");
+  /* const [imgurl, setImgurl] = useState(""); */
   const [password, setPassword] = useState("");
   const [isEdit, setIsEditing] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleEditClick = () => {
     setUsername(user.username);
-    setImgurl(user.imageUrl || "");
+    /* setImgurl(user.imageUrl || ""); */
     setPassword(user.password);
     setIsEditing(true);
   };
@@ -24,7 +26,7 @@ const Profile = () => {
 
       const updatedUser = {
         username,
-        imageUrl: imgurl,
+        /* imageUrl: imgurl, */
         password,
       };
 
@@ -85,22 +87,37 @@ const Profile = () => {
     } else {
       setUser(null); // If there's no token, set user to null
     }
-  }, [navigate]);
+  }, [/* navigate, */ location.state?.forceReload]);
 
   return (
     <>
       {user ? (
         <>
+          <div className="md:container-sm px-10 space-x-4 mx-auto w-5/6">
+            <Link to="/fetchAllBlogs">
+              <button className="bg-sky-500 px-4 py-2 w-fit rounded-lg shadow-md hover:bg-sky-600 hover:font-bold hover:text-white">
+                <ArrowBackIcon /> Back
+              </button>
+            </Link>
+          </div>
           <div className="md:container-sm px-10 space-x-4 bg-slate-50 mt-2 mx-auto flex flex-row justify-center border-0 bg-orange-50 w-5/6 ">
             <div className="basis-1/4 border-r-1">
               <div className="rounded-full p-8 flex flex-col grid justify-items-center">
-                  <img
-                    src={user.imageUrl || "https://icons.veryicon.com/png/o/miscellaneous/standard/avatar-15.png"}
-                    alt="avatar"
-                    width={200}
-                    className="rounded-full"
-                  />
-                
+                <img
+                  src={
+                    user.profilePicture
+                      ? `${user.profilePicture}?${Date.now()}`
+                      : "https://icons.veryicon.com/png/o/miscellaneous/standard/avatar-15.png"
+                  }
+                  alt="avatar"
+                  width={200}
+                  className="rounded-full"
+                />
+                {console.log(user.profilePicture)}
+                {/* <img
+                    src={(user.profilePicture ? `${user.profilePicture}?t=${Date.now()}` : "default.png")} alt="avatar"
+                  /> */}
+
                 {/* Link to upload new profile picture */}
                 <Link to={`/uploadProfilePicture/${user._id}`}>
                   {/* {console.log(user._id)
@@ -122,11 +139,11 @@ const Profile = () => {
                   </button>
                 ) : (
                   <button
-                  className="p-4 rounded-lg w-36 bg-green-500 text-white hover:bg-green-600"
-                  onClick={saveProfile}
-                >
-                  Save Changes
-                </button>
+                    className="p-4 rounded-lg w-36 bg-green-500 text-white hover:bg-green-600"
+                    onClick={saveProfile}
+                  >
+                    Save Changes
+                  </button>
                 )}
                 <Link to="/create">
                   <button className="p-4 rounded-lg w-36 hover:bg-sky-500 hover:w-40 hover:text-white hover:font-bold">
@@ -147,17 +164,17 @@ const Profile = () => {
               </div>
               <div className="mb-4 pl-5 text-xl flex pb-5">Profile</div>
               {isEdit ? (
-              <div className="pl-10 space-y-2">
-                <div>
-                  <label className="block">User's Name:</label>
-                  <input
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    className="border rounded p-2 w-full"
-                  />
-                </div>
-                {/* <div>
+                <div className="pl-10 space-y-2">
+                  <div>
+                    <label className="block">User's Name:</label>
+                    <input
+                      type="text"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      className="border rounded p-2 w-full"
+                    />
+                  </div>
+                  {/* <div>
                   <label className="block">Image URL:</label>
                   <input
                     type="text"
@@ -166,26 +183,24 @@ const Profile = () => {
                     className="border rounded p-2 w-full"
                   />
                 </div> */}
-                <div>
-                  <label className="block">Password:</label>
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="border rounded p-2 w-full"
-                  />
+                  <div>
+                    <label className="block">Password:</label>
+                    <input
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="border rounded p-2 w-full"
+                    />
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <div className="text-l pl-10">{`Hello, ${user.username}!`}
-              </div>
-            )}
+              ) : (
+                <div className="text-l pl-10">{`Hello, ${user.username}!`}</div>
+              )}
             </div>
-            
           </div>
         </>
       ) : (
-         <Loader />
+        <Loader />
       )}
     </>
   );

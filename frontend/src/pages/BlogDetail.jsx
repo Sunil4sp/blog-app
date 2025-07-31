@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const BlogDetail = () => {
     const { id } = useParams(); // Get the blog ID from the URL
@@ -32,7 +33,8 @@ const BlogDetail = () => {
         }
 
         try {
-        await axios.delete(`http://localhost:8000/deleteBlog/${id}`, {
+            console.log(`Attempting to delete blog with ID: ${id}`);
+            await axios.delete(`http://localhost:8000/deleteBlog/${id}`, {
             headers: {
             Authorization: `Bearer ${token}`,
             },
@@ -57,6 +59,13 @@ const BlogDetail = () => {
         grid border-slate-100 bg-slate-50 border-2 border-solid p-4 m-2px dark:bg-slate-800 dark:border-slate-500 border-b rounded-t-xl"
         >
         <div className="text-center tracking-widest text-red">Blog Details</div>
+        <Link to={-1}>
+            <button
+                className="bg-sky-500 px-4 py-2 w-fit rounded-lg shadow-md hover:bg-sky-600 hover:font-bold hover:text-white"
+            >
+                <ArrowBackIcon /> Back
+            </button>
+        </Link>
         <label>Title:</label>
         <div className="grid grid-flow-row auto-rows-auto border-2 border-solid p-4 m-2px font-semibold">
             <h1>{blog.title}</h1>
@@ -68,14 +77,14 @@ const BlogDetail = () => {
         <div className="grid grid-flow-col justify-center gap-4">
             <Link to={`/edit/${blog._id}`}>
             <button
-                className="bg-sky-500 hover:bg-sky-700 hover:text-white px-4 py-2 w-fit rounded-lg shadow-md"
+                className="bg-sky-500 hover:bg-sky-700 px-4 py-2 w-fit rounded-lg shadow-md hover:text-white hover:font-bold"
             >
                 Edit a blog
             </button>
             </Link>
             <button
             onClick={deleteBlog}
-            className="bg-red-500 hover:bg-red-700 hover:text-white px-4 py-2 w-fit rounded-lg shadow-md"
+            className="bg-red-500 hover:bg-red-700 hover:text-white px-4 py-2 w-fit rounded-lg shadow-md hover:font-bold"
             >
             Delete a blog
             </button>

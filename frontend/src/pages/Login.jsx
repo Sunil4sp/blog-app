@@ -66,22 +66,25 @@ const Login = () => {
           {error && <div style={{ color: 'red' }}>{error}</div>}
           <button
             type='submit'
-              className="p-4 rounded-lg m-4 w-64"
+              className="p-4 rounded-lg m-4 w-64 hover:font-bold"
               style={{ backgroundColor: "#a1eafb" }}
               onClick={onSubmit}
             >
           Login
             </button>
-          <h4>*if not having account</h4>
-          <Link>Forget Password</Link>
-          <Link to="/register">
-            <button
-              className="p-4 rounded-lg m-4 w-64"
-              style={{ backgroundColor: "#a1eafb" }}
-            >
-              Register
-            </button>
-          </Link>
+          <Link>Forgot Password</Link>  
+          <div className='p-8'>
+            <Link to="/register">
+              <h4 className='text-center hover:font-bold'>if not having account</h4>
+              <button
+                className="p-4 rounded-lg m-4 w-64 hover:font-bold"
+                style={{ backgroundColor: "#a1eafb" }}
+              >
+                Register
+              </button>
+            </Link>
+          </div>
+          
         </form>
       </div>
     </div>
