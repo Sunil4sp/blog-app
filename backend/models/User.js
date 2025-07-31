@@ -20,10 +20,14 @@ const userSchema  = new mongoose.Schema({
         required: true,
         min: 5,
     },
-    imageUrl: {
+    /* imageUrl: {
             type: String,
-            default: "/* https://media.licdn.com/dms/image/v2/D4D03AQH5fX-1hC1fiA/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1676646556620?e=1751500800&v=beta&t=re_1AzkJ-dibj9OVzDBJFQxU-OQfI37oMDiBRzMK0HU */",
-        },
+            default: "",
+        }, */
+    profilePicture: {
+        type: String,
+        default: "", 
+    },
     later: [
         {
         type: mongoose.Schema.Types.ObjectId,

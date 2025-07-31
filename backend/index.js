@@ -44,8 +44,8 @@ const storage = multer.diskStorage({
         const ext = path.extname(file.originalname);
         cb(null, file.fieldname + '-' + uniqueSuffix + ext);
     }
-  });
-  const upload = multer({ storage });
+    });
+const upload = multer({ storage });
     
     // Route to handle profile picture upload
 app.post('/uploadProfilePicture/:id', upload.single('profilePicture'), async (req, res) => {
@@ -55,12 +55,12 @@ app.post('/uploadProfilePicture/:id', upload.single('profilePicture'), async (re
             return res.status(400).json({ error: 'No file uploaded' });
             }
         
-            const imageUrl = `http://localhost:8000/uploads/${req.file.filename}`;
+            const profilePicture = `http://localhost:8000/uploads/${req.file.filename}`;
         
             try {
             const user = await User.findByIdAndUpdate(
                 userId,
-                { profilePicture: imageUrl },
+                profilePicture,
                 { new: true } // Return the updated user
             );
         
@@ -68,7 +68,7 @@ app.post('/uploadProfilePicture/:id', upload.single('profilePicture'), async (re
                 return res.status(404).json({ error: 'User not found' });
             }
         
-            res.json({ message: 'Profile picture uploaded successfully', imageUrl });
+            res.json({ message: 'Profile picture uploaded successfully', profilePicture });
             } catch (err) {
             console.error('Upload error:', err);
             res.status(500).json({ error: 'Server error during upload' });
@@ -175,11 +175,11 @@ app.put('/editProfile', /* fetchUser, */ async (req, res) => {
         const decoded = jwt.verify(token, 'your_secret_key');
         const userId = decoded.userId;
     
-        const { username, password, imageUrl } = req.body;
+        const { username, password/* , imageUrl */ } = req.body;
     
         const updateData = {};
         if (username) updateData.username = username;
-        if (imageUrl) updateData.imageUrl = imageUrl;
+        /* if (imageUrl) updateData.imageUrl = imageUrl; */
         if (password) updateData.password = await bcrypt.hash(password, 10);
     
         const updatedUser = await User.findByIdAndUpdate(userId, updateData, { new: true });
@@ -264,19 +264,29 @@ app.get('/post/:id', async (req, res) => {
     }
     });
 app.put('/updateBlog/:id', async (req, res) => {
-
-        const { id } = req.params;  // Extract the blog ID from the route parameters
-        const { title, description } = req.body;  // Assuming title and description are being updated
     
         try {
+            const token = req.headers.authorization?.split(' ')[1];
+            if (!token) return res.status(401).json({ message: 'No token provided' });
+
+            const decoded  = jwt.verify(token, 'your_secret_key');
+            const userId   = decoded.userId;          // logged-in user
+
             // Find the blog post by ID
-            const post = await Post.findById(id);
+            const blogId   = req.params.id;
+            const post = await Post.findById(blogId);
     
             if (!post) {
                 return res.status(404).json({ message: 'Post not found' });
             }
+
+            /* ---------- 3.  Ownership check ---------- */
+            if (post.user.toString() !== userId) {
+                return res.status(403).json({ message: 'You are not authorised to edit this post' });
+            }
     
             // Update the blog with the new data (title, description, etc.)
+            const { title, description } = req.body;
             post.title = title || post.title;  // Only update if a new title is provided
             post.description = description || post.description;  // Only update if a new description is provided
             
@@ -292,12 +302,20 @@ app.put('/updateBlog/:id', async (req, res) => {
 
 app.delete('/deleteBlog/:id',/*  fetchUser, */ async (req, res) => {
         try{
+            const token = req.headers.authorization?.split(" ")[1];
+            if (!token) return res.status(401).json({ message: "No token provided" });
+
+            const decoded = jwt.verify(token, 'your_secret_key');
+            const userId = decoded.userId;
+
             const blogId = req.params.id;
             
-            const userId = await User.findById(_id);
+            /* const userId = await Blog.user; */
         
             const blog = await Post.findById(blogId);
-            console.log(blogId, blog);
+
+            /* const userId = await User.findById(_id); */
+            console.log(/* blogId, blog, */ userId);
         
             if(!blog){
                 return res.status(404).json({ message: "Blog not found",
@@ -310,9 +328,9 @@ app.delete('/deleteBlog/:id',/*  fetchUser, */ async (req, res) => {
                     .json({ message: "Forbidden, you cannot delete someone else blog",
                     status: "error" });
             }
-            await Post.findByIdAndDelete(blog);
+            await Post.findByIdAndDelete(blogId);
         
-            res.status(200).json({status:"Success", message: "Blog deleted successfully", blogId })
+            res.status(200).json({status:"Success", message: "Blog deleted successfully"/* , blogId */ })
             } catch(error){
                 console.error("Error deleting blog:", error);
                 res.status(500).json({ message: "Internal Server Error"})
@@ -415,6 +433,26 @@ app.post('/addVote/:id', async (req, res) => {
                 res.status(500).json({ message: "Internal Server Error"})
             } */
     });
+
+app.get("/search", async(req, res) => {
+    const { q } = req.query;
+    console.log(q);
+    
+    if (!q) return res.status(400).json({ message: "No search query provided" });
+
+    try {
+        const regex = new RegExp(q, "i"); // case-insensitive
+        const blogs = await Post.find({
+        $or: [
+            { title: regex },
+            { content: regex }
+        ]
+        });
+        res.json({ blogs });
+    } catch (err) {
+        res.status(500).json({ error: "Server error" });
+    }
+});
 
 app.listen(PORT, (req, res) =>{
     ConnectDB();
