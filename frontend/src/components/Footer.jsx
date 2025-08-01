@@ -47,8 +47,8 @@ const Footer = () => {
       <div className='p-4'>
         <h3 className='text-center'>QUICK LINKS</h3>
         <ul className='list-none px-6 py-4'>
-          <Link /* to={`/fetchblogs/${user.id}`} */><li>My Blog</li></Link>
-          <li>Contact US</li>
+          <Link to={`/fetchblogs/${id}`}><li>My Blog</li></Link>
+          <Link to='/contact'><li>Contact US</li></Link>
           <li>FAQs</li>
           <li>Shipping Policy</li>
           <li>Terms of Service</li>

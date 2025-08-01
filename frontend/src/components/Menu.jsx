@@ -75,6 +75,9 @@ const Menu = ({setMenu}) => {
         <h3 className="text-black text-sm hover:text-gray-500 cursor-pointer hover:font-bold">
           <Link to={`/fetchAllBlogs`} onClick={() => setMenu(false)}>Blogs Collection</Link>
         </h3>
+        <h3 className="text-black text-sm hover:text-gray-500 cursor-pointer hover:font-bold">
+          <Link to="/contact" onClick={() => setMenu(false)}>Contact Us</Link>
+        </h3>
 
       {/* Logout button is always visible if the user is logged in */}
         <h3

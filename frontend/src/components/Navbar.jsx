@@ -31,6 +31,8 @@ useEffect(() => {
         })
         .then((response) => {
           setUser(response.data.user); // Set the user data if successful
+          console.log(response.data.user);
+          
         })
         .catch((error) => {
           console.error("Error fetching user data", error);
@@ -42,8 +44,6 @@ useEffect(() => {
       setUser(null); // If there's no token, set user to null
     }
   }, []);
-
- /* const { user} = useContext(UserContext) */
 
   return (
     <>
