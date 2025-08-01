@@ -9,6 +9,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const app = express();
 const Post = require("./models/Blog");
+const Contact = require("./models/Contact")
 const path = require('path');
 const fs = require('fs');
 /* const fetchUser = require('./middlewares/fetchUser'); */
@@ -21,6 +22,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use("/blogs", Post);
+app.use("/contact", Contact);
 
 //connect to Db
 const ConnectDB = async() =>{
@@ -452,6 +454,12 @@ app.get("/search", async(req, res) => {
     } catch (err) {
         res.status(500).json({ error: "Server error" });
     }
+});
+
+app.post('/contact', (req, res) => {
+    const { name, email, subject, message } = req.body;
+    // Save or send email logic here
+    res.status(200).json({ message: 'Message received!' });
 });
 
 app.listen(PORT, (req, res) =>{
